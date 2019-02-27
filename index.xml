@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ICERM Generative Models Discussion Group</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on ICERM Generative Models Discussion Group</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 20 Aug 2017 21:38:52 +0800</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Papers</title>
+      <link>http://localhost:1313/papers/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>http://localhost:1313/papers/</guid>
+      <description>Papers Here is a list of suggested papers, loosely organized by topic.
+Compositional Generative Models  Lake, Brenden M., Ruslan Salakhutdinov, and Joshua B. Tenenbaum. 2015. “Human-Level Concept Learning through Probabilistic Program Induction.” Science 350 (6266): 1332–38. link
+ George, D., W. Lehrach, K. Kansky, M. Lázaro-Gredilla, C. Laan, B. Marthi, X. Lou, et al. 2017. “A Generative Vision Model That Trains with High Data Efficiency and Breaks Text-Based CAPTCHAs.</description>
+    </item>
+    
+    <item>
+      <title>Schedule</title>
+      <link>http://localhost:1313/schedule/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>http://localhost:1313/schedule/</guid>
+      <description>Schedule Tutorial on Probabilistic Programming When: Thursday 2019-02-28 10 am to 11 am
+Where: ICERM 10th Floor Classroom
+Presenter: Daniel Ritchie
+Scribe: Theresa Barton
+Overview of Deep Generative Models When: Tuesday 2019-03-05 10 am to 11 am
+Where: ICERM 10th Floor Classroom
+Presenter: Guangyao Zhou and Shubhendu Trivedi
+Scribe: Guangyao Zhou</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>http://localhost:1313/about/</guid>
+      <description>The ICERM Generative Models Discussion Group is part of the Semester Program in Computer Vision at ICERM. We meet in most weeks in the Spring 2019 semester in the 10th floor classroom at ICERM. The discussion group will focus on the general research area of probabilistic generative models.
+For questions, please contact Guangyao Zhou.</description>
+    </item>
+    
+    <item>
+      <title>Tutorial on Probabilistic Programming</title>
+      <link>http://localhost:1313/post/probabilistic-programming/</link>
+      <pubDate>Tue, 26 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/probabilistic-programming/</guid>
+      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie would give a tutorial on probabilistic programming in the 10th floor classroom at ICERM.</description>
+    </item>
+    
+  </channel>
+</rss>
