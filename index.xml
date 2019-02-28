@@ -28,14 +28,14 @@ Compositional Generative Models  Lake, Brenden M., Ruslan Salakhutdinov, and Jos
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
       <guid>https://stanniszhou.github.io/discussion-group/schedule/</guid>
-      <description>Schedule Tutorial on Probabilistic Programming When: Thursday 2019-02-28 10 am to 11 am
-Where: ICERM 10th Floor Classroom
-Presenter: Daniel Ritchie
-Scribe: Theresa Barton
-Overview of Deep Generative Models When: Tuesday 2019-03-05 10 am to 11 am
+      <description>Upcoming Schedule Overview of Deep Generative Models When: Tuesday 2019-03-05 10 am to 11 am
 Where: ICERM 10th Floor Classroom
 Presenter: Guangyao Zhou and Shubhendu Trivedi
-Scribe: Guangyao Zhou</description>
+Scribe: Guangyao Zhou
+Past Schedule Tutorial on Probabilistic Programming When: Thursday 2019-02-28 10 am to 11 am
+Where: ICERM 10th Floor Classroom
+Presenter: Daniel Ritchie (Slides)
+Scribe: Theresa Barton</description>
     </item>
     
     <item>
@@ -51,10 +51,10 @@ For questions, please contact Guangyao Zhou.</description>
     <item>
       <title>Tutorial on Probabilistic Programming</title>
       <link>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</link>
-      <pubDate>Tue, 26 Feb 2019 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</guid>
-      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie would give a tutorial on probabilistic programming in the 10th floor classroom at ICERM.</description>
+      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie gave a tutorial on probabilistic programming in the 11th lecture hall at ICERM. The slides are available online. A blog post with a summary would be available later.</description>
     </item>
     
   </channel>

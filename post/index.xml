@@ -6,7 +6,7 @@
     <description>Recent content in Posts on ICERM Generative Models Discussion Group</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 26 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://stanniszhou.github.io/discussion-group/post/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,10 +14,10 @@
     <item>
       <title>Tutorial on Probabilistic Programming</title>
       <link>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</link>
-      <pubDate>Tue, 26 Feb 2019 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</guid>
-      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie would give a tutorial on probabilistic programming in the 10th floor classroom at ICERM.</description>
+      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie gave a tutorial on probabilistic programming in the 11th lecture hall at ICERM. The slides are available online. A blog post with a summary would be available later.</description>
     </item>
     
   </channel>
