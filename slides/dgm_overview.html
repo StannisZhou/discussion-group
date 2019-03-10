@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Guangyao (Stannis) Zhou">
+  <title>Overview of Deep Generative Models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+	div.plotly-graph-div {
+	  margin-right: auto;
+	  margin-left: auto;
+	}
+	.reveal p.author {
+		text-align: center;
+	}
+	.reveal p.date {
+		text-align: center;
+	}
+	.reveal p.subtitle {
+		text-align: center;
+	}
+	.reveal ul {
+		display: block;
+	}
+	.reveal ol {
+		display: block;
+	}
+  </style>
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/solarized.css" id="theme">
+  <link rel="stylesheet" href="custom.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'http://lab.hakim.se/reveal-js/css/print/pdf.css' : 'http://lab.hakim.se/reveal-js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Overview of Deep Generative Models</h1>
+  <p class="subtitle">Division of Applied Math, Brown University</p>
+  <p class="author">Guangyao (Stannis) Zhou</p>
+  <p class="date">March 5th, 2019</p>
+</section>
+<section id="TOC">
+	<p style="text-align: left; font-size: 150%"> Outline </p>
+
+<ul>
+<li><a href="#/overview">Overview</a></li>
+<li><a href="#/generative-adversarial-networks">Generative Adversarial Networks</a></li>
+<li><a href="#/variational-autoencoders">Variational Autoencoders</a></li>
+<li><a href="#/flow-based-generative-models">Flow-based Generative Models</a></li>
+<li><a href="#/discussions">Discussions</a></li>
+</ul>
+</section>
+
+<section><section id="overview" class="titleslide slide level2" style="font-size: 200%"><h2>Overview</h2></section><section id="discriminative-v.s.-generative" class="slide level3">
+<h3>Discriminative v.s. Generative</h3>
+<ul>
+<li>Objects of interest:
+<ul>
+<li>Latent variable <span class="math inline">\(z\)</span></li>
+<li>Observed variable <span class="math inline">\(x\)</span></li>
+</ul></li>
+<li>Discriminative models: model <span class="math inline">\(p(z|x)\)</span>
+<ul>
+<li>Logistic regression, neural networks, etc.</li>
+</ul></li>
+<li>Generative models: model <span class="math inline">\(p(x, z)=p(z)p(x|z)\)</span>
+<ul>
+<li>Markov random fields, Bayesian networks</li>
+<li>Deep generative models</li>
+</ul></li>
+</ul>
+</section><section id="deep-generative-models" class="slide level3">
+<h3>Deep Generative Models</h3>
+<ul>
+<li>Focus on easy sampling</li>
+<li>Popular Frameworks
+<ul>
+<li>Generative Adversarial Networks (GANs)</li>
+<li>Variational Autoencoders (VAEs)</li>
+<li>Flow-based Generative Models</li>
+</ul></li>
+</ul>
+</section><section id="commonalities-and-differences" class="slide level3">
+<h3>Commonalities and Differences</h3>
+<ul>
+<li>Commonalities: Model the stochastic generation process
+<ul>
+<li>Base distribution transformed by a neural network</li>
+</ul></li>
+<li>Differences: How to learn the parameters
+<ul>
+<li>GANs: Adversarial learning</li>
+<li>VAEs: Variational Inference</li>
+<li>Flow-based models: Maximum Likelihood</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="generative-adversarial-networks" class="titleslide slide level2"><h2>Generative Adversarial Networks</h2></section><section id="stochastic-generation-process" class="slide level3">
+<h3>Stochastic Generation Process</h3>
+<ul>
+<li>Base distribution: some simple distribution <span class="math inline">\(p_z(z)\)</span>
+<ul>
+<li>Example: Multivariate Gaussian</li>
+<li>Easy to sample from</li>
+</ul></li>
+<li>Generator: differentiable transformation <span class="math inline">\(G(z; \theta_g)\)</span></li>
+<li>The actual random variable:
+<ul>
+<li><span class="math inline">\(x = G(z; \theta_g)\)</span> where <span class="math inline">\(z\sim p_z(z)\)</span></li>
+</ul></li>
+</ul>
+</section><section id="adversarial-training" class="slide level3">
+<h3>Adversarial Training</h3>
+<ul>
+<li>Two different distributions:
+<ul>
+<li>Generator distribution <span class="math inline">\(p_g(x)\)</span></li>
+<li>Data distribution <span class="math inline">\(p_{\text{data}}(x)\)</span></li>
+</ul></li>
+<li>Use an discriminator to train the model
+<ul>
+<li>Can be thought of as a simple two-category classifier</li>
+<li>Likelihood as the loss function</li>
+<li>Samples from both distributions to train the discriminator</li>
+<li>Samples from the generator distribution to train the generator</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="variational-autoencoders" class="titleslide slide level2"><h2>Variational Autoencoders</h2></section><section id="stochastic-generation-process-1" class="slide level3">
+<h3>Stochastic Generation Process</h3>
+<ul>
+<li>Base distribution: some simple distribution <span class="math inline">\(p_z(z)\)</span>
+<ul>
+<li>Example: Multivariate Gaussian</li>
+<li>Easy to sample from</li>
+</ul></li>
+<li>Differentiable transformation <span class="math inline">\(\mu(z; \theta)\)</span> and <span class="math inline">\(\sigma(z; \theta)\)</span></li>
+<li>The actual random variable:
+<ul>
+<li><span class="math inline">\(x_i\sim N(\mu_i(z; \theta), \sigma_i^2(z; \theta))\)</span></li>
+</ul></li>
+</ul>
+</section><section id="variational-inference" class="slide level3">
+<h3>Variational Inference</h3>
+<ul>
+<li>Ideal scenario: maximize <span class="math inline">\(\log p_\theta(x)=\log \int p_\theta(x, z) dz\)</span>
+<ul>
+<li>The integral is usually intractable</li>
+</ul></li>
+<li>Instead, look at the &quot;Evidence Lower Bound (ELBO)&quot;:
+<span class="math display">\[\begin{align*}
+\log p_\theta(x) &amp;= \log \int p_\theta(x, z) dz = \log \int q_\phi(z|x) \frac{p_\theta(x, z)}{q_\phi(z|x)} dz\\
+&amp;\geq \int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz
+\end{align*}\]</span></li>
+</ul>
+</section><section id="variational-inference-1" class="slide level3">
+<h3>Variational Inference</h3>
+<ul>
+<li>Maximize ELBO, tightest lower bound
+<ul>
+<li>Same as minimizing <span class="math inline">\(D(q_\phi(z|x)||p_\theta(x, z))\)</span></li>
+</ul></li>
+<li>&quot;Amortized&quot; version of mean-field approximation
+<ul>
+<li>More differentiable transformations
+<ul>
+<li><span class="math inline">\(\mu(x; \phi)\)</span> and <span class="math inline">\(\sigma(x; \phi)\)</span></li>
+</ul></li>
+<li><span class="math inline">\(q_\phi(z_i|x) = N(z|\mu_i(x; \phi), \sigma_i^2(x; \phi))\)</span></li>
+</ul></li>
+</ul>
+</section><section id="reparametrization-trick" class="slide level3">
+<h3>Reparametrization trick</h3>
+<ul>
+<li>Want to maximize using gradient descent
+<span class="math display">\[\begin{equation*}
+\int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz
+\end{equation*}\]</span></li>
+<li>Difficulty: estimating the gradients</li>
+</ul>
+</section><section id="reparametrization-trick-1" class="slide level3">
+<h3>Reparametrization trick</h3>
+<ul>
+<li>A naive approach for estimating the gradient w.r.t. <span class="math inline">\(\phi\)</span>:
+<span class="math display">\[\begin{align*}
+&amp;\nabla_{\phi}\int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz \\
+=&amp; \int q_\phi(z|x) \nabla_{\phi} \log q_{\phi}(z|x)\left[\log \frac{p_\theta(x, z)}{q_\phi(z|x)} - 1\right] dz
+\end{align*}\]</span></li>
+<li>Draw Monte Carlo samples <span class="math inline">\(z^{(i)}\sim q_{\phi}(z|x), i=1,\cdots, n\)</span> to estimate the gradients:
+<span class="math display">\[\begin{equation*}
+\frac{1}{n}\sum_{i=1}^n \nabla_{\phi} \log q_{\phi}(z^{(i)}|x)\left[\log \frac{p_\theta(x, z^{(i)})}{q_\phi(z^{(i)}|x)} - 1\right]
+\end{equation*}\]</span></li>
+</ul>
+</section><section id="reparametrization-trick-2" class="slide level3">
+<h3>Reparametrization trick</h3>
+<ul>
+<li>Problems with this naive approach:
+<ul>
+<li>Sometimes we can't evaluate <span class="math inline">\(\nabla_{\phi}\log q_{\phi}(z|x)\)</span></li>
+<li>Even if we can evaluate <span class="math inline">\(\nabla_{\phi}\log q_{\phi}(z|x)\)</span>, we usually have a very high variance estimator</li>
+<li>Can't easily make use of automatic differentiation</li>
+</ul></li>
+<li>Solution: reparametrization trick
+<ul>
+<li>Look at <span class="math inline">\(q_\phi(z|x)\)</span> as parameterless base distribution <span class="math inline">\(p(\epsilon)\)</span> transformed by differentiable transformation <span class="math inline">\(g_\phi(\epsilon, x)\)</span></li>
+</ul></li>
+</ul>
+</section><section id="reparametrization-trick-3" class="slide level3">
+<h3>Reparametrization trick</h3>
+<ul>
+<li>For VAEs, <span class="math inline">\(p(\epsilon) = N(0, I)\)</span>, and
+<span class="math display">\[\begin{equation*}
+g_\phi(\epsilon, x) = \mu(x; \phi) + \sigma(x; \phi) \odot \epsilon
+\end{equation*}\]</span>
+where <span class="math inline">\(\odot\)</span> represents elementwise multiplication.</li>
+<li>Sample <span class="math inline">\(\epsilon^{(i)}, i=1, \cdots, n\)</span> from <span class="math inline">\(p(\epsilon)\)</span></li>
+<li>Use the objective
+<span class="math display">\[\begin{equation*}
+\frac{1}{n}\sum_{i=1}^n \log \frac{p_\theta(x, g_\phi(\epsilon^{(i)}, x))}{q_\phi(g_\phi(\epsilon^{(i)}, x)|x)}
+\end{equation*}\]</span></li>
+<li>Can easily estimate gradients w.r.t. <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span> using backpropagation.</li>
+</ul>
+</section></section>
+<section><section id="flow-based-generative-models" class="titleslide slide level2"><h2>Flow-based Generative Models</h2></section><section id="stochastic-generation-process-2" class="slide level3">
+<h3>Stochastic Generation Process</h3>
+<ul>
+<li>Base distribution: some simple distribution <span class="math inline">\(p_z(z)\)</span>
+<ul>
+<li>Example: Multivariate Gaussian</li>
+<li>Easy to sample from</li>
+</ul></li>
+<li><strong>Reversible</strong> differentiable transformation <span class="math inline">\(x = G(z)\)</span>, for which we can <strong>easily calculate the determinant of the Jacobian</strong> <span class="math inline">\(|J G(z)|\)</span></li>
+<li>Exact probability density function given by
+<span class="math display">\[\begin{equation*}
+p_x(x) = \frac{p_z(z)}{|J G(z)|}, \text{where }z = G^{-1}(x)
+\end{equation*}\]</span></li>
+</ul>
+</section><section id="maximum-likelihood-estimation" class="slide level3">
+<h3>Maximum Likelihood Estimation</h3>
+<ul>
+<li>Direct access to exact likelihood</li>
+<li>Train with maximum likelihood</li>
+<li>More details in the next meeting!</li>
+</ul>
+</section></section>
+<section><section id="discussions" class="titleslide slide level2" style="font-size: 250%"><h2>Discussions</h2></section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display a presentation progress bar
+        progress: true,
+        // Push each slide change to the browser history
+        history: true,
+
+	  math: {
+		  // mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+		  config: 'TeX-AMS_HTML-full'
+	  },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/math/math.js', async: true },
+        ]
+      });
+    </script>
+    </body>
+</html>
