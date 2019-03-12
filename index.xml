@@ -50,6 +50,17 @@ For questions, please contact Guangyao Zhou.</description>
     </item>
     
     <item>
+      <title>Overview of Deep Generative Models</title>
+      <link>https://stanniszhou.github.io/discussion-group/post/dgm-overview/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://stanniszhou.github.io/discussion-group/post/dgm-overview/</guid>
+      <description>Summary
+This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.
+ Overview When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$).</description>
+    </item>
+    
+    <item>
       <title>Tutorial on Probabilistic Programming</title>
       <link>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>

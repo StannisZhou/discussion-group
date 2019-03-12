@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Overview of Deep Generative Models - ICERM Generative Models Discussion Group</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Guangyao Zhou" /><meta name="description" content="Summary
+This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.
+ Overview When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$)." /><meta name="keywords" content="ICERM, computer vision, generative models" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+
+
+<link rel="canonical" href="https://stanniszhou.github.io/discussion-group/post/dgm-overview/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/discussion-group/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/discussion-group/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/discussion-group/favicon-16x16.png">
+<link rel="manifest" href="/discussion-group/manifest.json">
+<link rel="mask-icon" href="/discussion-group/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/discussion-group/dist/even.34e802c7.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Overview of Deep Generative Models" />
+<meta property="og:description" content="Summary
+This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.
+ Overview When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stanniszhou.github.io/discussion-group/post/dgm-overview/" />
+<meta property="article:published_time" content="2019-03-05T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-03-05T00:00:00&#43;00:00"/>
+
+<meta itemprop="name" content="Overview of Deep Generative Models">
+<meta itemprop="description" content="Summary
+This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.
+ Overview When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$).">
+
+
+<meta itemprop="datePublished" content="2019-03-05T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-03-05T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1415">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Overview of Deep Generative Models"/>
+<meta name="twitter:description" content="Summary
+This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.
+ Overview When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$)."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/discussion-group/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/discussion-group/papers/">
+        <li class="mobile-menu-item">Papers</li>
+      </a><a href="/discussion-group/schedule/">
+        <li class="mobile-menu-item">Schedule</li>
+      </a><a href="/discussion-group/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/papers/">Papers</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/schedule/">Schedule</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Overview of Deep Generative Models</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-05 </span>
+        
+          <span class="more-meta"> 1415 words </span>
+          <span class="more-meta"> 7 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#generative-adversarial-networks">Generative Adversarial Networks</a>
+<ul>
+<li><a href="#stochastic-generation-process">Stochastic Generation Process</a></li>
+<li><a href="#adversarial-training">Adversarial Training</a></li>
+</ul></li>
+<li><a href="#variational-autoencoders">Variational Autoencoders</a>
+<ul>
+<li><a href="#stochastic-generation-process-1">Stochastic Generation Process</a></li>
+<li><a href="#variational-inference-basics">Variational Inference: Basics</a></li>
+<li><a href="#reparametrization-trick">Reparametrization Trick</a></li>
+</ul></li>
+<li><a href="#flow-based-generative-models">Flow-based Generative Models</a>
+<ul>
+<li><a href="#stochastic-generation-process-2">Stochastic Generation Process</a></li>
+<li><a href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<div class="admonition abstract"><p class="admonition-title">Summary</p>
+  <p>This week Stannis gave a high-level overview of three popular families of deep generative models. The discussion is mainly based on the original papers [1][2]. The goal is to point out the commonalities and differences between these models, and have a detailed discussion on the different learning methods employed by these models.</p>
+
+</div>
+
+<h1 id="overview">Overview</h1>
+
+<p>When using latent variable models for probabilistic modeling, the objects of interest are the latent variables (which we denote by $z$), and the observed variables (which we denote by $x$).</p>
+
+<p>There are two different kinds of probabilistic models: discriminative and generative. When using discriminative models, we directly model the conditional distribution $p(z|x)$. Some common examples include logistic regression and neural networks. When using generative models, we focus instead on the joint distribution $p(x, z)$, which usually factors into the product of the prior distribution $p(z)$ and the likelihood function $p(x|z)$. Some common examples include Markov random fields and Bayesian networks, and the topic of this discussion, deep generative models.</p>
+
+<p>In this discussion, we would cover three popular families of deep generative models: Generative Adversarial Networks (GANs), Variational Autoencoders (VAEs), and Flow-based Generative Models. When it comes to deep generative models, a central focus is on easy sampling, and these different models all explicitly specify a stochastic generation process for sampling from the generative models. This usually comes in the form of some easy-to-sample-from base distributions, transformed by some complicated differentiable transformations (e.g. a neural network). The main differences between these models lie in how we learn their parameters. For GANs, we use adversarial training. For VAEs, we use variational inference. And for flow-based generative models, we use maximum likelihood estimation.</p>
+
+<p>In what follows, we are going to look at the three families of deep generative models in more detail. For each one of the families, we are going to look at two key aspects: the associated stochastic generation process, and the method for learning the parameters.</p>
+
+<h1 id="generative-adversarial-networks">Generative Adversarial Networks</h1>
+
+<h2 id="stochastic-generation-process">Stochastic Generation Process</h2>
+
+<p>In GANs, we start with some simple base distribution $p_z(z)$ (e.g. a multivariate Gaussian), which is easy to sample from, and a differentiable transformation $G(z; \theta_g)$, which we call the generator. The stochastic generation process involves applying the generator $G(z; \theta_g)$ to the base distribution $p_z(z)$, and the actual random variable we use to model the data is given by $x = G(z; \theta_g)$ where $z\sim p_z(z)$.</p>
+
+<h2 id="adversarial-training">Adversarial Training</h2>
+
+<p>We use adversarial training to learn the parameters for GANs. Note that we are working with two different distributions, a generator distribution $p_g(x)$, which is induced by the stochastic generation process $x = G(z; \theta_g)$ with $z\sim p_z(z)$, and a data distribution $p_\text{data}(x)$, which represents the empirical distribution we get from the data. The key idea of adversarial training is to employ an additional neural network, which we call the discriminator, to train the model.</p>
+
+<p>Instead of laying down the formulas for adversarial training, we mention a helpful way to think about it: the discriminator can be thought of as a binary classifier. When doing adversarial training, we always use the likelihood function associated with this binary classifier as the loss function. We alternate between updating the generator parameters and the discriminator parameters. For both purposes, the loss function is the same. The difference between these two different kinds of updates lies in what data and labels we use. When updating the generator parameters, we regard the loss function (i.e. the likelihood) as a function of the generator parameters, and we estimate the gradients using samples we get from $p_g(x)$, and we assign label $0$ to all these samples. In other words, we are working with only negative samples. When updating the discriminator parameters, we regard the loss function (again the likelihood) as a function of the discriminator parameters, and we estimate the gradients using samples from both $p_g(x)$ (to which we assign label 0) and $p_\text{data}(x)$ (to which we assign label 1). This is the usual way to train a binary classifier.</p>
+
+<h1 id="variational-autoencoders">Variational Autoencoders</h1>
+
+<h2 id="stochastic-generation-process-1">Stochastic Generation Process</h2>
+
+<p>We use the formulation in [2] as an example. In VAEs, we again start with some simple base distribution $p_z(z)$ (e.g. a multivariate Gaussian), which is easy to sample from. And we have two differentiable transformations $\mu(z; \theta)$ and $\sigma(z; \theta)$. The actual random variable we use to model the data is given by
+$$x_i\sim N(\mu_i(z; \theta), \sigma_i^2(z; \theta)), i=1, \cdots, d_x$$
+where $d_x$ is the dimension of the data.</p>
+
+<h2 id="variational-inference-basics">Variational Inference: Basics</h2>
+
+<p>We make use of the variational inference framework to learn the parameters for VAEs. In order to understand variational inference, we first make the observation that to learn the parameters of the model, in the ideal scenario, we would want to maximize the log marginal likelihood
+$$\log p_{\theta}(x)=\log \int p_{\theta}(x, z) dz$$
+The problem with this approach is that evaluating the log marginal likelihood involves an integral that&rsquo;s usually intractable. The central idea of variational inference is that, instead of trying to deal with this complicated integral, we look at the so-called &ldquo;Evidence Lower Bound (ELBO)&rdquo;. Using Jensen&rsquo;s inequality, it&rsquo;s easy to see that
+$$\log p_\theta(x) = \log \int p_\theta(x, z) dz = \log \int q_\phi(z|x) \frac{p_\theta(x, z)}{q_\phi(z|x)} dz \geq \int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz$$
+where
+$$\int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz$$
+is our ELBO. In variational inference, we want to maximize ELBO, so that we can get the tightest lower bound for the log marginal likelihood. This can also be understood as minimizing the KL divergence $D(q_\phi(z|x)||p_\theta(x, z))$.</p>
+
+<p>Traditionally, variational inference is done using mean-field approximation. For VAEs, we use an &ldquo;amortized&rdquo; version of mean-field approximation. We introduce more differentiable transformations $\mu(x; \phi)$ and $\sigma(x; \phi)$, and use
+$$q_\phi(z_i|x) = N(z|\mu_i(x; \phi), \sigma_i^2(x; \phi)), i=1,\cdots, d_z$$
+where $d_z$ is the dimension of the latent variable.</p>
+
+<h2 id="reparametrization-trick">Reparametrization Trick</h2>
+
+<p>A useful technique in applying variational inference to learning parameters for VAEs is the reparametrization trick. To understand what this trick is and why it is necessary, recall that our goal is to maximize the EBLO
+$$\int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz$$
+using gradient descent for both $\theta$ and $\phi$. The main difficulty here is estimating the gradients for $\phi$. A naive approach is first to note that
+$$\nabla_{\phi}\int q_\phi(z|x) \log \frac{p_\theta(x, z)}{q_\phi(z|x)} dz <br />
+= \int q_\phi(z|x) \nabla_{\phi} \log q_{\phi}(z|x)\left[\log \frac{p_\theta(x, z)}{q_\phi(z|x)} - 1\right] dz$$
+and then draw Monte Carlo samples $z^{(i)}\sim q_{\phi}(z|x), i=1,\cdots, n$ to get an unbiased estimate of the gradients:
+$$\frac{1}{n}\sum_{i=1}^n \nabla_{\phi} \log q_{\phi}(z^{(i)}|x)\left[\log \frac{p_\theta(x, z^{(i)})}{q_\phi(z^{(i)}|x)} - 1\right]$$
+This is also referred to as the score-function estimator.</p>
+
+<p>However, there are a lot of problems with this naive approach: sometimes we can&rsquo;t evaluate the score-function $\nabla_{\phi}\log q_{\phi}(z|x)$. Even if we can evaluate $\nabla_{\phi}\log q_{\phi}(z|x)$, the score-function estimator usually has very high variance. Furthermore, we can&rsquo;t easily make use of automatic differentiation when we use the score-function estimator.</p>
+
+<p>The solution to the above problems is the reparametrization trick. The key idea is to look at $q_\phi(z|x)$ as a parameterless base distribution $p(\epsilon)$ transformed by some differentiable transformation $g_\phi(\epsilon, x)$. For VAEs, $p(\epsilon) = N(0, I)$, and
+$$g_\phi(\epsilon, x) = \mu(x; \phi) + \sigma(x; \phi) \odot \epsilon$$
+where $\odot$ represents elementwise multiplication.</p>
+
+<p>If we can do this reparametrization, we can then sample $\epsilon^{(i)}, i=1, \cdots, n$ from $p(\epsilon)$, and use
+$$\frac{1}{n}\sum_{i=1}^n \log \frac{p_\theta(x, g_\phi(\epsilon^{(i)}, x))}{q_\phi(g_\phi(\epsilon^{(i)}, x)|x)}$$
+as an approximation to ELBO. This way we can easily estimate stochastic gradients w.r.t. $\theta$ and $\phi$ using backpropagation.</p>
+
+<h1 id="flow-based-generative-models">Flow-based Generative Models</h1>
+
+<h2 id="stochastic-generation-process-2">Stochastic Generation Process</h2>
+
+<p>In flow-based generative models, we repeat the previous pattern for the stochastic generation process. We start with some simple base distribution $p_z(z)$ (e.g. a multivariate Gaussian), which is easy to sample from. The essential idea of flow-based generative models is to have a <strong>reversible</strong> differentiable transformation $x = G(z)$, for which we can <strong>easily calculate the determinant of the Jacobian</strong> $|J G(z)|$. If this is true, then the exact probability density function is given by
+$$p_x(x) = \frac{p_z(z)}{|J G(z)|}, \text{where }z = G^{-1}(x)$$</p>
+
+<h2 id="maximum-likelihood-estimation">Maximum Likelihood Estimation</h2>
+
+<p>Since we have direct access to the exact likelihood function, we can simply train such models using maximum likelihood estimation. We would go into more details concerning how we can actually specify such models in our next meeting.</p>
+
+<h1 id="references">References</h1>
+
+<p>[1] Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. “Generative Adversarial Nets.” In Advances in Neural Information Processing Systems 27, edited by Z. Ghahramani, M. Welling, C. Cortes, N. D. Lawrence, and K. Q. Weinberger, 2672–80. Curran Associates, Inc. <a href="https://papers.nips.cc/paper/5423-generative-adversarial-nets">link</a></p>
+
+<p>[2] Kingma, Diederik P., and Max Welling. 2013. “Auto-Encoding Variational Bayes.” arXiv [stat.ML]. <a href="http://arxiv.org/abs/1312.6114v10">link</a></p>
+
+    </div>
+
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tczhouguangyao" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Guangyao Zhou</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-03-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/discussion-group/post/probabilistic-programming/">
+            <span class="next-text nav-default">Tutorial on Probabilistic Programming</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'tczhouguangyao';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/StannisZhou/discussion-group" class="iconfont icon-github" title="github"></a>
+  <a href="https://stanniszhou.github.io/discussion-group/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> site pv: <span id="busuanzi_value_site_pv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> site uv: <span id="busuanzi_value_site_uv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">olOwOlo</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stanniszhou.github.io/discussion-group/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
