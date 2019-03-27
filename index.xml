@@ -31,13 +31,13 @@ Compositional Generative Models  Lake, Brenden M., Ruslan Salakhutdinov, and Jos
       <description>Upcoming Schedule GANs That Work Well Empirically When: Thursday 2019-03-28 10 am to 11 am
 Where: ICERM 11th Floor Lecture Hall
 Presenter: Omer Sumer
-Scribe: TBD
-Past Schedule Tutorial on Probabilistic Programming When: Thursday 2019-02-28 10 am to 11 am
+Scribe: Omer Sumer
+Digging Deeper into Flow-Based Generative Models When: Thursday 2019-04-04 10 am to 11 am
 Where: ICERM 11th Floor Lecture Hall
-Presenter: Daniel Ritchie (Slides)
-Scribe: Theresa Barton
-Overview of Deep Generative Models and Discussion When: Tuesday 2019-03-05 10 am to 11 am
-Where: ICERM 11th Floor Lecture Hall</description>
+Presenter: Shubhendu Trivedi
+Scribe: Guangyao Zhou
+References:
+ Grathwohl, Will, Ricky T. Q. Chen, Jesse Bettencourt, Ilya Sutskever, and David Duvenaud. 2018. “FFJORD: Free-Form Continuous Dynamics for Scalable Reversible Generative Models.</description>
     </item>
     
     <item>
