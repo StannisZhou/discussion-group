@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tutorial on Probabilistic Programming - ICERM Generative Models Discussion Group</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Theresa Barton" /><meta name="description" content="Summary
+This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.
+ What is a PPL? Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.
+For example, here is a program written in WebPPL:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  var geometric = function() { return flip(." /><meta name="keywords" content="ICERM, computer vision, generative models" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+
+
+<link rel="canonical" href="https://stanniszhou.github.io/discussion-group/post/ppls/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/discussion-group/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/discussion-group/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/discussion-group/favicon-16x16.png">
+<link rel="manifest" href="/discussion-group/manifest.json">
+<link rel="mask-icon" href="/discussion-group/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/discussion-group/dist/even.34e802c7.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Tutorial on Probabilistic Programming" />
+<meta property="og:description" content="Summary
+This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.
+ What is a PPL? Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.
+For example, here is a program written in WebPPL:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  var geometric = function() { return flip(." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stanniszhou.github.io/discussion-group/post/ppls/" />
+<meta property="article:published_time" content="2019-02-28T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-02-28T00:00:00&#43;00:00"/>
+
+<meta itemprop="name" content="Tutorial on Probabilistic Programming">
+<meta itemprop="description" content="Summary
+This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.
+ What is a PPL? Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.
+For example, here is a program written in WebPPL:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  var geometric = function() { return flip(.">
+
+
+<meta itemprop="datePublished" content="2019-02-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="936">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tutorial on Probabilistic Programming"/>
+<meta name="twitter:description" content="Summary
+This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.
+ What is a PPL? Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.
+For example, here is a program written in WebPPL:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  var geometric = function() { return flip(."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/discussion-group/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/discussion-group/papers/">
+        <li class="mobile-menu-item">Papers</li>
+      </a><a href="/discussion-group/schedule/">
+        <li class="mobile-menu-item">Schedule</li>
+      </a><a href="/discussion-group/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/papers/">Papers</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/schedule/">Schedule</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Tutorial on Probabilistic Programming</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-28 </span>
+        
+          <span class="more-meta"> 936 words </span>
+          <span class="more-meta"> 5 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#what-is-a-ppl">What is a PPL?</a></li>
+<li><a href="#types-of-ppls">Types of PPLs</a></li>
+<li><a href="#how-are-ppls-used">How are PPLs used?</a></li>
+<li><a href="#how-does-ppl-inference-work">How does PPL Inference Work</a>
+<ul>
+<li><a href="#exact-enumeration">Exact Enumeration</a></li>
+<li><a href="#sequential-monte-carlo-smc">Sequential Monte Carlo (SMC)</a></li>
+<li><a href="#markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</a></li>
+<li><a href="#variational-inference">Variational Inference</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<div class="admonition abstract"><p class="admonition-title">Summary</p>
+  <p>This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.</p>
+
+</div>
+
+<h1 id="what-is-a-ppl">What is a PPL?</h1>
+
+<p>Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.</p>
+
+<p>For example, here is a program written in <a href="http://webppl.org/">WebPPL</a>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">geometric</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">flip</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nx">geometric</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">conditionedGeometric</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">geometric</span><span class="p">();</span>
+  <span class="nx">factor</span><span class="p">(</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="o">-</span><span class="kc">Infinity</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">dist</span> <span class="o">=</span> <span class="nx">Infer</span><span class="p">(</span>
+  <span class="p">{</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;enumerate&#39;</span><span class="p">,</span> <span class="nx">maxExecutions</span><span class="o">:</span> <span class="mi">10</span><span class="p">},</span>
+  <span class="nx">conditionedGeometric</span><span class="p">);</span>
+
+<span class="nx">viz</span><span class="p">.</span><span class="nx">auto</span><span class="p">(</span><span class="nx">dist</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>In this program, <code>geometric()</code> computes a geometric distribution from samples of a Bernoulli distribution, <code>conditionedGeometric()</code> constrains these samples with a condition, and the <code>enumerate()</code> method computes the conditional distribution of geometric samples conditioned on the constraint <code>(x &gt; 2)</code>.</p>
+
+<h1 id="types-of-ppls">Types of PPLs</h1>
+
+<p>Probabilistic programming languages fall into two categories &ndash; <em>universal</em> and <em>non-universal</em>. Universal PPLs such as <a href="https://cocolab.stanford.edu/papers/GoodmanEtAl2008-UncertaintyInArtificialIntelligence.pdf">Church</a> were developed to model complex hierarchical Bayesian models, such as those used in cognitive science.</p>
+
+<blockquote>
+<p>Universal PPLs can sample from any computable probability distribution.</p>
+</blockquote>
+
+<p>A computable probability distribution is a distribution that a probabilistic Turing machine can sample correctly to an arbitrary precision. As models of computational complexity, probabilistic Turing machines are similar to nondeterministic Turing machines in that they allow for multiple valid paths of execution. However, rather than computing all paths simultaneously, probabilistic Turing machines branch according to a random decision probability. The different paths may lead to disparate outcomes (some runs accepting, others rejecting identical input tokens) so rather than definitively deciding whether an input is in the language, a probabilistic Turing Machine decides with some pre-defined error.</p>
+
+<p>Not all probability distributions are computable even under these assumptions, and even if the joint distribution of two random variables is computable, the conditional distribution of these variables might not be [1].</p>
+
+<h1 id="how-are-ppls-used">How are PPLs used?</h1>
+
+<p>The design philosophy of PPLs is to separate the model construction from the inference engine, so that domain experts such as cognitive scientists can define complex models without having to compute the conditional distributions required to perform inference on their model.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">define</span> <span class="nv">burglary-dist</span>
+  <span class="p">(</span><span class="nv">enumeration-query</span>
+   <span class="p">(</span><span class="nv">define</span> <span class="nv">burglary</span> <span class="p">(</span><span class="nv">flip</span> <span class="mf">.1</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">define</span> <span class="nv">earthquake</span> <span class="p">(</span><span class="nv">flip</span> <span class="mf">.2</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">define</span> <span class="nv">alarm</span> <span class="p">(</span><span class="nv">flip</span> <span class="p">(</span><span class="nv">if</span> <span class="nv">burglary</span>
+                           <span class="p">(</span><span class="nv">if</span> <span class="nv">earthquake</span> <span class="mf">.95</span> <span class="mf">.94</span><span class="p">)</span>
+                           <span class="p">(</span><span class="nv">if</span> <span class="nv">earthquake</span> <span class="mf">.29</span> <span class="mf">.001</span><span class="p">))))</span>
+   <span class="p">(</span><span class="nv">define</span> <span class="nv">john-calls</span> <span class="p">(</span><span class="nv">flip</span> <span class="p">(</span><span class="nv">if</span> <span class="nv">alarm</span> <span class="mf">.9</span> <span class="mf">.05</span><span class="p">)))</span>
+   <span class="p">(</span><span class="nv">define</span> <span class="nv">mary-calls</span> <span class="p">(</span><span class="nv">flip</span> <span class="p">(</span><span class="nv">if</span> <span class="nv">alarm</span> <span class="mf">.7</span> <span class="mf">.01</span><span class="p">)))</span>
+   <span class="p">(</span><span class="nv">if</span> <span class="nv">burglary</span> <span class="ss">&#39;burglary</span> <span class="ss">&#39;no-burglary</span><span class="p">)</span>
+   <span class="nv">john-calls</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">barplot</span> <span class="nv">burglary-dist</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><a href="http://forestdb.org/models/burglary.html">Source</a></p>
+
+<p>This Bayes net computes the probability of an <code>earthquake</code> conditioned on a call from <code>John</code>. Here are some more examples of different statistical models expressed in PPLs:</p>
+
+<ul>
+<li><a href="https://github.com/probmods/webppl/blob/dev/examples/hmm.wppl">Hidden Markov Model</a></li>
+<li><a href="https://github.com/probmods/webppl/blob/dev/examples/linearRegression.wppl">Linear Regression</a></li>
+<li><a href="https://github.com/probmods/webppl/blob/dev/examples/pcfg.wppl">Grammars</a></li>
+<li><a href="https://github.com/probmods/webppl/blob/dev/examples/lda.wppl">Latent Dirichlet Allocation for topic modeling in documents</a></li>
+<li><a href="https://mrkulk.github.io/www_cvpr15/1999.pdf">Vision as Inverse Graphics</a></li>
+</ul>
+
+<h1 id="how-does-ppl-inference-work">How does PPL Inference Work</h1>
+
+<blockquote>
+<p>How the posterior calculation, or <code>infer</code>, step is computed depends on the design of the PPL, the performance requirements, and the type of events being sampled.</p>
+</blockquote>
+
+<h2 id="exact-enumeration">Exact Enumeration</h2>
+
+<p><code>Infer</code> can be computed through exact enumeration when the event space is discrete. Exact enumeration is only possible in languages such as WebPPL that have constructs that allow for pausing/resuming computation such as threads, coroutines or continuations. For the following program:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">uniformDraw</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">uniformDraw</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="kd">var</span> <span class="nx">z</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+    <span class="nx">condition</span> <span class="p">(</span><span class="nx">z</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">z</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>The probability of generating $z=5$ is computed as
+$$P(x=4, y=1) + P(x=2, y=3) + &hellip; P(x=1, y=4)$$</p>
+
+<h2 id="sequential-monte-carlo-smc">Sequential Monte Carlo (SMC)</h2>
+
+<p>In the continuous case, inference via exact enumeration is impossible: since each branch is a sample from a continuous distribution, there are infinite possible paths. Sequential Monte Carlo is the approximate generalization of enumeration &ndash; the $n$ highest probability execution paths are executed. Here is a <a href="http://dippl.org/chapters/05-particlefilter.html">particle filter example of SMC</a>.</p>
+
+<h2 id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</h2>
+
+<p><strong>Metropolis Hastings Algorithm</strong></p>
+
+<p>Given: A function $f(x)$, and a proposal distribution $Q(x&rsquo;|x)$,</p>
+
+<ul>
+<li>$x$ is a deterministic trace through a probabilistic program &ndash; resulting from filling in all the random choices</li>
+<li>$f(x)$ is the density of trace $x$</li>
+<li>Transition function $Q(x&rsquo;|x)$ is changing one of the random choices in the program trace</li>
+</ul>
+
+<p>Sample a new state $x&rsquo;\sim Q(\cdot|x)$</p>
+
+<ul>
+<li>Accept with probability $A(x&rsquo;|x) = \min(1, \frac{f(x&rsquo;)Q(x|x&rsquo;)}{f(x)Q(x&rsquo;|x)})$</li>
+<li>Repeat $N$ times</li>
+<li>The probability of visiting state $x$ is proportional to $f(x)$</li>
+</ul>
+
+<p>Evaluating the transition model $Q(x&rsquo;|x)$ is nontrivial &ndash; random choices upstream impact program execution downstream, including the selection of further random variables. This can be avoided by choosing local proposals [2].</p>
+
+<h2 id="variational-inference">Variational Inference</h2>
+
+<p>Approximating the <code>infer</code> function via variational inference utilizes the optimization of an easy-to-sample guide distribution to approximate the hard-to-sample posterior. Given a generative model $p(x,y)$, in our case a program written in a PPL, the goal of <code>infer</code> is to compute the posterior $p(x|y)$. This conditional distribution is often intractable.</p>
+
+<p>However for any given $y$  there is a tractable $q_0(x)$ that can be used to approximate the posterior. The optimal $q_0$ can be found by minimizing the KL divergence between $q_0(x)$ and $p(x|y)$.</p>
+
+<h1 id="references">References</h1>
+
+<p>[1] Ackerman, Nathanael L., Cameron E. Freer, and Daniel M. Roy. 2010. “On the Computability of Conditional Probability.” arXiv [math.LO]. arXiv. <a href="http://arxiv.org/abs/1005.3014">link</a></p>
+
+<p>[2] Wingate, David, Andreas Stuhlmueller, and Noah Goodman. 2011. “Lightweight Implementations of Probabilistic Programming Languages Via Transformational Compilation.” In Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics, edited by Geoffrey Gordon, David Dunson, and Miroslav Dudík, 15:770–78. Proceedings of Machine Learning Research. Fort Lauderdale, FL, USA: PMLR. <a href="http://proceedings.mlr.press/v15/wingate11a.html">link</a></p>
+
+<p>[3] <a href="https://dritchie.github.io/pdf/thesis.pdf">Daniel Ritchie&rsquo;s Ph.D. Thesis</a></p>
+
+    </div>
+
+<script>talkyardServerUrl='https:\/\/comments-for-stanniszhou-github-io.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Theresa Barton</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-02-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/discussion-group/post/dgm-overview/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Overview of Deep Generative Models</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/StannisZhou/discussion-group" class="iconfont icon-github" title="github"></a>
+  <a href="https://stanniszhou.github.io/discussion-group/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> site pv: <span id="busuanzi_value_site_pv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> site uv: <span id="busuanzi_value_site_uv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">olOwOlo</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stanniszhou.github.io/discussion-group/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

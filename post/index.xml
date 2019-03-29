@@ -24,11 +24,15 @@ This week Stannis gave a high-level overview of three popular families of deep g
     
     <item>
       <title>Tutorial on Probabilistic Programming</title>
-      <link>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</link>
+      <link>https://stanniszhou.github.io/discussion-group/post/ppls/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://stanniszhou.github.io/discussion-group/post/probabilistic-programming/</guid>
-      <description>On Thursday 2019-02-28 from 10 am to 11 am, Prof. Daniel Ritchie gave a tutorial on probabilistic programming in the 11th floor lecture hall at ICERM. The slides are available online. A blog post with a summary would be available later.</description>
+      <guid>https://stanniszhou.github.io/discussion-group/post/ppls/</guid>
+      <description>Summary
+This week, Daniel gave a tutorial on probabilistic programming and its use in generative modeling.
+ What is a PPL? Probabilistic programming languages (PPLs) leverage powerful programming concepts such as recursion, abstraction and modularity to define and sample from user-specified distributions and perform inference on statistical models.
+For example, here is a program written in WebPPL:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  var geometric = function() { return flip(.</description>
     </item>
     
   </channel>
