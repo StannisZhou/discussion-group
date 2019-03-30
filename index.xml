@@ -48,6 +48,17 @@ For questions, please contact Guangyao Zhou.</description>
     </item>
     
     <item>
+      <title>GANs that work well empirically</title>
+      <link>https://stanniszhou.github.io/discussion-group/post/gan-empirical/</link>
+      <pubDate>Thu, 28 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://stanniszhou.github.io/discussion-group/post/gan-empirical/</guid>
+      <description>Overview Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.
+The loss formulation of GAN is as follows:
+$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] + \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$</description>
+    </item>
+    
+    <item>
       <title>Overview of Deep Generative Models</title>
       <link>https://stanniszhou.github.io/discussion-group/post/dgm-overview/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>

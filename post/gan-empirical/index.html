@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>GANs that work well empirically - ICERM Generative Models Discussion Group</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Omer Sumer" /><meta name="description" content="Overview Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.
+The loss formulation of GAN is as follows:
+$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] &#43; \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$" /><meta name="keywords" content="ICERM, computer vision, generative models" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+
+
+<link rel="canonical" href="https://stanniszhou.github.io/discussion-group/post/gan-empirical/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/discussion-group/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/discussion-group/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/discussion-group/favicon-16x16.png">
+<link rel="manifest" href="/discussion-group/manifest.json">
+<link rel="mask-icon" href="/discussion-group/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/discussion-group/dist/even.34e802c7.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="GANs that work well empirically" />
+<meta property="og:description" content="Overview Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.
+The loss formulation of GAN is as follows:
+$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] &#43; \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stanniszhou.github.io/discussion-group/post/gan-empirical/" />
+<meta property="article:published_time" content="2019-03-28T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-03-28T00:00:00&#43;00:00"/>
+
+<meta itemprop="name" content="GANs that work well empirically">
+<meta itemprop="description" content="Overview Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.
+The loss formulation of GAN is as follows:
+$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] &#43; \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$">
+
+
+<meta itemprop="datePublished" content="2019-03-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-03-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1773">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GANs that work well empirically"/>
+<meta name="twitter:description" content="Overview Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.
+The loss formulation of GAN is as follows:
+$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] &#43; \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/discussion-group/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/discussion-group/papers/">
+        <li class="mobile-menu-item">Papers</li>
+      </a><a href="/discussion-group/schedule/">
+        <li class="mobile-menu-item">Schedule</li>
+      </a><a href="/discussion-group/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/papers/">Papers</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/schedule/">Schedule</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">GANs that work well empirically</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-28 </span>
+        
+          <span class="more-meta"> 1773 words </span>
+          <span class="more-meta"> 9 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#improved-techniques-to-train-gans">Improved techniques to train GANs</a></li>
+<li><a href="#generating-high-quality-images">Generating High-Quality Images</a></li>
+<li><a href="#image-to-image-translation">Image-to-Image Translation</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="overview">Overview</h1>
+
+<p>Generative Adversarial Networks (GANs) are a class of deep learning methods which is first proposed by Ian Goodfellow and other researchers at the University of Montreal in 2014 [1]. Two neural networks, a generator, and a discriminator learn in a zero-sum game framework.</p>
+
+<p>The loss formulation of GAN is as follows:</p>
+
+<p>$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] + \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big]$$</p>
+
+<p>By sampling from a uniform distribution, generator tries to capture the data distribution, whereas discriminator estimates whether a data sample comes from the real distribution or G. Generator is learned to maximize the probability of D making a mistake.</p>
+
+<p>Since the first paper, GAN variants have shown promising results; however, they suffer from several problems, too. The balance of generator and discriminator is difficult, and there are many situations where gradients may diminish, or the model oscillate and never converges. Even in the success case, there is no guarantee that the latent space represents each node of the real data distribution (mode collapse). Furthermore, the training of GANs is highly sensitive to hyperparameter selection.</p>
+
+<p>In this blog post, I will briefly summarize the additional tricks which lead to better performance of GANs (by reducing the chance of these problems happen), an example of GAN method which produces high-resolution images and an example of conditional GANs, image-to-image translation.</p>
+
+<h1 id="improved-techniques-to-train-gans">Improved techniques to train GANs</h1>
+
+<p>The network architectures in the original paper were fully connected layers. Radford et al. [2] replaced any pooling layers with strided convolutions and fractional strided convolutions in D and G, removed fully connected hidden layers, used batch normalization. They also used ReLU activations in all layers of G, except for the output which uses tanh. By making these improvements, they achieved a good improvement and showed experimental results in face and scene generation.</p>
+
+<p>Salimans et al. [3] propose several tricks to improve the performance of GAN training. We can shortly summarize them as follows:</p>
+
+<ul>
+<li><p><strong>Feature matching:</strong> letting $f(x)$ denote activations on an intermediate layer of discriminator (or another pre-trained net)</p>
+
+<ul>
+<li>$ || \mathbb{E}_{x\sim p_{data}}\ f(x) - \mathbb{E}_{z\sim p_{z}} \  f(G(z))||_2^2 $</li>
+</ul></li>
+
+<li><p><strong>Minibatch discrimination:</strong> <em>(to encourage diversity)</em></p>
+
+<ul>
+<li>Let $f(x_i) \in \mathbb{R}^A$, $T \in \mathbb{R}^{A\times B \times C}$ a tensor, $f(x_i) \times T=M_i \in \mathbb{R}^{B \times C}$<br /></li>
+<li>Compute the $L_1$ distances between rows of $M_i$ and apply a negative exponential: $$c_b(x_i, x_j)= \exp(- ||M_{i,b} - M_{j,b}||_{L_1}) \in \mathbb{R} $$</li>
+</ul></li>
+
+<li><p><strong>Historical Averaging:</strong> learning rule scales well in time.</p>
+
+<ul>
+<li>(loosely inspired by the fictitious play that can find equilibria) $|| \ \theta - \frac{1}{t}\sum_{i=1}^{t} \theta[i] \ ||^2$</li>
+</ul></li>
+
+<li><p><strong>(One-sided) label smoothing:</strong> In the output of D, real images&rsquo; outputs smoothed to avoid overconfidence.</p></li>
+
+<li><p>Other practical tricks to stabilize DC-GAN-like networks: <a href="https://github.com/soumith/ganhacks">https://github.com/soumith/ganhacks</a></p></li>
+</ul>
+
+<h1 id="generating-high-quality-images">Generating High-Quality Images</h1>
+
+<p>In addition to the previously mentioned tricks to improve GAN performance, there were many advances in GAN variants, particularly in their <em>loss formulation</em>. The original GAN&rsquo;s discriminator is a classifier with a sigmoid cross-entropy loss function (which may lead to vanishing gradient problems), and it was difficult to optimize Jensen-Shannon divergence in case of little or no overlap between two distributions. [4] adopted the least squares loss function for the discriminator. They show that minimizing the Pearson $\chi^2$ divergence. Another work [5,6] used Wasserstein 1 (Earth-Movers) loss function which has a smooth differentiable function almost everywhere.</p>
+
+<p>Let us look at an example of GAN algorithm which yields photorealistic, high-resolution images: Progressive growing of GANs [7]. The key idea is <em>&ldquo;to grow both the generator and discriminator progressively: starting from a low resolution, we add new layers that model increasingly fine details as training progresses. This both speeds the training up and greatly stabilizes it, allowing to produce images of unprecedented quality.&rdquo;</em></p>
+
+<figure>
+<img src="../../images/2019-03-28/progressive_gan_1.png" alt="Progressive GANs" width="600" />
+ <figcaption>
+ <b>Progressive Growing of GANs.</b> Training of generator (G) and discriminator (D) having a low spatial resolution of 4×4 pixels and progressively increasing up to the resolution of 1024x1024.
+ </figcaption>
+</figure>
+
+<p>Progressive GANs&rsquo; main loss is based on improved Wasserstein GAN [6]. As well as progressive growth idea, there are other important points which lead to the diversity and photorealism of their generated images:</p>
+
+<ul>
+<li><strong>Minibatch stddev:</strong> adding the across.minibatch standard deviation as an additional feature map.</li>
+
+<li><p><strong>Equalized learning rate:</strong> initializing weights trivially by normal dist. with unit variance and normalize by a constant layerwise coefficient (He et al. 2015), $\hat{w}_i=w_i/c$</p></li>
+
+<li><p><strong>Pixelwise feature normalization in G</strong></p>
+
+<ul>
+<li>$b_{x,y}=a_{x,y} / \sqrt{\frac{1}{N} \sum_{j=0}^{N-1} (a_{x,y}^j)^2+\epsilon}$</li>
+</ul></li>
+</ul>
+
+<p>A follow-up work from the authors of Progressive-GAN, Style-GAN [8]. Their main contribution is to integrate generator network the ability to control different levels of features (<em>&ldquo;styles&rdquo;</em>). <em>&ldquo;Generator starts from a learned constant input and adjusts the style of the image at each convolution layer based on the latent code, therefore directly controlling the strength of image features at different scales.&rdquo;</em></p>
+
+<p>They defined three levels of styles as follows:</p>
+
+<ul>
+<li><strong>coarse ($4^2 -8^2$)</strong>    <em>pose, general hairstyle, face shape</em></li>
+<li><strong>middle ($16^2-32^2$)</strong>   <em>facial features, hairstyle, eyes open/closed</em></li>
+<li><strong>fine ($64^2 - 1024^2$)</strong> <em>color scheme (eye, hair, and skin) and micro features.</em></li>
+</ul>
+
+<figure>
+    <center>
+    <img src="../../images/2019-03-28/style_gan.png" alt="Progressive GANs" width="500" class="center" />
+    <figcaption> <b>Training of StyleGAN-based generator.</b> </figcaption>
+    </center>
+</figure>
+
+<p>In the training procedure of generator, the input vector is encoded by a <strong>mapping network</strong> first before fed into the generator. In this way, they control different visual features. In each resolution, a learned affine transformation applied into the output of mapping network,$W$ and they are converted to &ldquo;style&rdquo; representations. Then, an instant normalization (AdaIN) which is adapted by style $y$.<br />
+$$AdaIN(x_i,y)= y_{s,i}\frac{x_i - \mu(x_i)}{\sigma(x_i)} + y_{b,i}$$<br />
+The <strong>adaptive instance normalization</strong> and adding style in different resolutions give the chance to disentangle the latent space in varying granularities. In addition to the attributed which can be disentangled, they add noise in different levels to have additional variations (for instance, freckles).</p>
+
+<p>One of the important problems of GANs is the poorly represented areas where the generator has difficulty to learn. Thus, they apply a truncation in following way: After some training, first compute the center of mass of $\mathcal{W}$ as $\hat{w}=\mathbb{E}_{z\sim P(z)} [f(z)]$ and scale the deviation of a given $w$ from the center as $\hat{w}=\hat{w}+\psi(w-\hat{w})$ where $\psi \le 1$.</p>
+
+<h1 id="image-to-image-translation">Image-to-Image Translation</h1>
+
+<p>In the original GAN idea and the examples covered in the previous section, generators learn the distribution only from the uniform of Gaussian distributions. A line of work, <em>conditional GANs</em> learn the distribution from the noise and some structural information such as a label, attribute or a feature representation. We can compare the loss formulation of unconditional and conditional GAN as follows:</p>
+
+<ul>
+<li><p>$G:z\rightarrow y$</p>
+
+<ul>
+<li>Standard GAN&rsquo;s learn a mapping from random noise $z$ to output image $y$</li>
+<li>$\mathcal{L}_{GAN}(G,D)=\mathbb{E} [ \log D(y)] + \mathbb{E}_{x,z} [ \log (1-D(G(x,z))) ]$</li>
+</ul></li>
+
+<li><p>$G:{x,z}\rightarrow y$</p>
+
+<ul>
+<li>Conditional GAN&rsquo;s learn a mapping from observed data $x$ and random noise $z$ to output image.</li>
+<li>$\mathcal{L}_{cGAN}(G,D)=\mathbb{E} [ \log D(x,y)] + \mathbb{E}_{x,z} [ \log (1-D(x, G(x,z))) ]$</li>
+</ul></li>
+
+<li><p>Adding an L2 or (the better one) L1 regularization in G.</p>
+
+<ul>
+<li>$\mathcal{L}_{L1}(G)=\mathbb{E}_{x,y,z}[ \ || y-G(x,z) ||_1 \ ]$</li>
+<li>$\mathcal{L}_{cGAN}(G,D) + \mathcal{L}_{L1}(G)$</li>
+</ul></li>
+</ul>
+
+<p>By adding an $L_1$ regression to conditional GAN, Isola et al. ($\texttt{pix2pix}$) [9] proposed a mapping between paired image domains such as aerial images$\leftrightarrow$maps, image$\leftrightarrow$painting, winter$\leftrightarrow$summer, and so on.</p>
+
+<figure>
+    <center>
+    <img src="../../images/2019-03-28/pix2pix_samples.png" alt="Progressive GANs" width="600" class="center" />
+    <figcaption> <b>Pix2pix.</b> Paired image-to-image translation samples. </figcaption>
+    </center>
+</figure>
+
+<p>Their results were quite impressive, but it is not easy to find paired dataset (automatically without manual labeling cost). The same authors in a follow-up work ($\texttt{CycleGAN}$) [10] showed that translations could be done even between unpaired domains. In CycleGAN, there are two discriminators and generators.</p>
+
+<figure>
+    <center>
+    <img src="../../images/2019-03-28/cycleGAN_1.png" alt="Progressive GANs" width="500" class="center" />
+    <figcaption> <b>CycleGAN.</b> Unpaired image-to-image translation using cycle consistency. </figcaption>
+    </center>
+</figure>
+
+<p>In addition to adversarial losses, they minimize two $L_1$ terms between the original domain and its remapped version in both sides.</p>
+
+<p>$$\mathcal{L}_{GAN}(G,D_Y,X,Y)=\mathbb{E}_{y\sim p_{data}(y)} [ \log D_Y(y)] + \mathbb{E}_{x \sim p_{data}(x)} [ \log (1-D_Y(G(x))) ]$$</p>
+
+<p>$$\mathcal{L}_{cyc}(G,F)=\mathbb{E}_{x \sim p_{data}(x)}[ \  ||F(G(x))-x||_1 ] + \mathbb{E}_{y\sim p_{data}(y)}[ \ ||G(F(y))-y||_1 ]$$</p>
+
+<p>And full objective function is<br />
+$$\mathcal{L}(G,F,D_X,D_Y)=\mathcal{L}_{GAN}(G,D_Y,X,Y)+\mathscr{L}_{GAN}(F,D_X,Y,X)+\lambda \mathscr{L}_{cyc}(G,F)$$</p>
+
+<p>Here are some examples of CycleGAN:
+<figure>
+    <center>
+    <img src="../../images/2019-03-28/cycleGAN_2.png" alt="Progressive GANs" width="500" class="center" />
+    <figcaption> Sample image-to-image translations (CycleGAN). </figcaption>
+    </center>
+</figure></p>
+
+<p>There are many recent works which aim to disentangle feature representations in latent space. Most of them depend on the idea of pix2pix or CycleGAN. For instance, generating images or videos by conditioned on two different images&rsquo; pose and appearance and combine them, face swapping, style transfer, etc. Here are two examples:</p>
+
+<ul>
+<li><p>Liqian Ma, Qianru Sun, Stamatios Georgoulis, Luc Van Gool, Bernt Schiele, Mario Fritz, &ldquo;Disentangled Person Image Generation,&rdquo; The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018, <a href="https://www.youtube.com/watch?v=vy2KgNdVRfo">(video)</a></p></li>
+
+<li><p>Caroline Chan, Shiry Ginosar, Tinghui Zhou, Alexei A. Efros, &ldquo;Everybody Dance Now,&rdquo; 2018,  <a href="http://arxiv.org/abs/1808.07371">http://arxiv.org/abs/1808.07371</a>, <a href="https://www.youtube.com/watch?v=PCBTZh41Ris">(video)</a>.</p></li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>In this blog post, I briefly described the <em>additional tricks which make the original GAN idea to fully equipped to generate high-resolution images</em> and <em>image-to-image translation as an example of conditioned GANs</em>.</p>
+
+<p>There are many qualitative and quantitative measures to compare generated images, and it is always possible to go further generating more realistic data samples. However, from my point of view, these are the points which make them (and other generative models) interesting:</p>
+
+<ul>
+<li>The power of <em>unsupervised representation</em> by showing the performance of D&rsquo;s features in image retrieval, classification tasks.</li>
+<li><em>Adding adversarial term to supervised learning</em> to make them perform better, for instance, pose estimation, facial keypoint detection, person identification, etc.)</li>
+<li><em>Augmenting the data</em> especially less sampled nodes.</li>
+<li><em>Towards more structural latent encoding.</em> The recent works try to disentangle into interpretable features in an unsupervised manner.</li>
+</ul>
+
+<h1 id="references">References</h1>
+
+<p>[1] Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio, &ldquo;Generative adversarial nets,&rdquo; International Conference on Neural Information Processing Systems (NeurIPS), 2014.</p>
+
+<p>[2] Alec Radford, Luke Metz, and Soumith Chintala, Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks,  International Conference on Learning Representations (ICLR), 2016.</p>
+
+<p>[3] Tim Salimans, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and Xi Chen. 2016. Improved techniques for training GANs,&rdquo; International Conference on Neural Information Processing Systems (NeurIPS), 2016.</p>
+
+<p>[4] Xudong Mao, Li Qing, Xie Haoran, Y. K. Lau Raymond, Wang Zhen, and Stephen Paul Smolley, &ldquo;Least Squares Generative Adversarial Networks.&rdquo; IEEE International Conference on Computer Vision (ICCV), 2017.</p>
+
+<p>[5] Martin Arjovsky, Soumith Chintala, Léon Bottou, &ldquo;Wasserstein Generative Adversarial Networks,&rdquo; Proceedings of the 34th International Conference on Machine Learning, PMLR 70:214-223, 2017.</p>
+
+<p>[6] Ishaan Gulrajani, Faruk Ahmed, Martin Arjovsky, Vincent Dumoulin, and Aaron Courville, &ldquo;Improved Training of Wasserstein GANs,&rdquo; International Conference on Neural Information Processing Systems (NeurIPS), 2016.</p>
+
+<p>[7] Tero Karras, Timo Aila, Samuli Laine, and Jaakko Lehtinen. &ldquo;Progressive Growing of GANs for Improved Quality, Stability, and Variation,&rdquo; International Conference on Learning Representations (ICLR), 2018.</p>
+
+<p>[8] Tero Karras, Samuli Laine, Timo Aila, &ldquo;A Style-Based Generator Architecture for Generative Adversarial Networks,&rdquo; <a href="https://arxiv.org/abs/1812.04948">https://arxiv.org/abs/1812.04948</a></p>
+
+<p>[9] Phillip Isola, Jun-Yan Zhu, Tinghui Zhou, and Alexei A. Efros, &ldquo;Image-to-Image Translation with Conditional Adversarial Networks,&rdquo; 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017.</p>
+
+<p>[10] Jun-Yan Zhu, Taesung Park, Phillip Isola, and Alexei A. Efros, &ldquo;Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial Networks,&rdquo; 2017 IEEE International Conference on Computer Vision (ICCV), 2017.</p>
+
+    </div>
+
+<script>talkyardServerUrl='https:\/\/comments-for-stanniszhou-github-io.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Omer Sumer</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-03-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/discussion-group/post/dgm-overview/">
+            <span class="next-text nav-default">Overview of Deep Generative Models</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/StannisZhou/discussion-group" class="iconfont icon-github" title="github"></a>
+  <a href="https://stanniszhou.github.io/discussion-group/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> site pv: <span id="busuanzi_value_site_pv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> site uv: <span id="busuanzi_value_site_uv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">olOwOlo</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stanniszhou.github.io/discussion-group/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
