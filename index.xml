@@ -28,13 +28,13 @@ Compositional Generative Models  Lake, Brenden M., Ruslan Salakhutdinov, and Jos
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
       <guid>https://stanniszhou.github.io/discussion-group/schedule/</guid>
-      <description>Upcoming Schedule Digging Deeper into Flow-Based Generative Models When: Thursday 2019-04-04 10 am to 11 am
+      <description>Upcoming Schedule Generative Adversarial Nets: Problems and Advances When: Thursday 2019-04-11 10 am to 11 am
 Where: ICERM 11th Floor Lecture Hall
-Presenter: Shubhendu Trivedi
-Scribe: Guangyao Zhou
+Presenter: Jian-Zhou Zhang
+Scribe: Jian-Zhou Zhang
 References:
- Grathwohl, Will, Ricky T. Q. Chen, Jesse Bettencourt, Ilya Sutskever, and David Duvenaud. 2018. “FFJORD: Free-Form Continuous Dynamics for Scalable Reversible Generative Models.” arXiv [cs.LG]. arXiv. http://arxiv.org/abs/1810.01367. link
- Zhang, Linfeng, E. Weinan, and Lei Wang. 2018. “Monge-Ampère Flow for Generative Modeling.</description>
+ Lei, Na, Kehua Su, Li Cui, Shing-Tung Yau, and David Xianfeng Gu. 2017. “A Geometric View of Optimal Transportation and Generative Model.” arXiv [cs.LG]. arXiv. link
+ Genevay, Aude, Gabriel Peyré, and Marco Cuturi. 2017. “GAN and VAE from an Optimal Transport Point of View.</description>
     </item>
     
     <item>
