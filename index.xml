@@ -28,12 +28,13 @@ Compositional Generative Models  Lake, Brenden M., Ruslan Salakhutdinov, and Jos
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
       <guid>https://stanniszhou.github.io/discussion-group/schedule/</guid>
-      <description>Upcoming Schedule Compositional Generative Models When: Thursday 2019-04-18 10 am to 11 am
+      <description>Upcoming Schedule Computability of Conditional Probability When: Thursday 2019-04-25 10 am to 11 am
 Where: ICERM 11th Floor Lecture Hall
-Presenter: Jeova Farias Sales Rocha Neto
-Scribe: Jeova
+Presenter: Guangyao Zhou
+Scribe: Guangyao Zhou
 References:
- Kortylewski, Adam, Clemens Blumer, Aleksander Wieczorek, Mario Wieser, Sonali Parbhoo, Andreas Morel-Forster, Volker Roth, and Thomas Vetter. 2017. “Greedy Structure Learning of Hierarchical Compositional Models.” arXiv [cs.CV]. arXiv. http://arxiv.org/abs/1701.06171.  Computability of Conditional Probability When: Thursday 2019-04-25 10 am to 11 am</description>
+ Ackerman, Nathanael L., Cameron E. Freer, and Daniel M. Roy. 2010. “On the Computability of Conditional Probability.” arXiv [math.LO]. arXiv. link
+ Ackerman, N. L., C. E. Freer, and D. M. Roy. 2011. “Noncomputable Conditional Distributions.” In 2011 IEEE 26th Annual Symposium on Logic in Computer Science, 107–16.</description>
     </item>
     
     <item>
@@ -44,6 +45,17 @@ References:
       <guid>https://stanniszhou.github.io/discussion-group/about/</guid>
       <description>The ICERM Generative Models Discussion Group is part of the Semester Program in Computer Vision at ICERM. We meet in most weeks in the Spring 2019 semester in the 11th floor lecture hall at ICERM. The discussion group will focus on the general research area of probabilistic generative models.
 For questions, please contact Guangyao Zhou.</description>
+    </item>
+    
+    <item>
+      <title>Digging Deeper Into Flow-based Generative Models</title>
+      <link>https://stanniszhou.github.io/discussion-group/post/ffjord/</link>
+      <pubDate>Thu, 04 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://stanniszhou.github.io/discussion-group/post/ffjord/</guid>
+      <description>Summary
+In this week&amp;rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution.</description>
     </item>
     
     <item>

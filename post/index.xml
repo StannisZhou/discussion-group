@@ -6,10 +6,21 @@
     <description>Recent content in Posts on ICERM Generative Models Discussion Group</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 28 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 04 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://stanniszhou.github.io/discussion-group/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Digging Deeper Into Flow-based Generative Models</title>
+      <link>https://stanniszhou.github.io/discussion-group/post/ffjord/</link>
+      <pubDate>Thu, 04 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://stanniszhou.github.io/discussion-group/post/ffjord/</guid>
+      <description>Summary
+In this week&amp;rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution.</description>
+    </item>
     
     <item>
       <title>GANs that work well empirically</title>

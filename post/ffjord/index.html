@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Digging Deeper Into Flow-based Generative Models - ICERM Generative Models Discussion Group</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Guangyao Zhou" /><meta name="description" content="Summary
+In this week&amp;rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution." /><meta name="keywords" content="ICERM, computer vision, generative models" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+
+
+<link rel="canonical" href="https://stanniszhou.github.io/discussion-group/post/ffjord/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/discussion-group/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/discussion-group/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/discussion-group/favicon-16x16.png">
+<link rel="manifest" href="/discussion-group/manifest.json">
+<link rel="mask-icon" href="/discussion-group/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/discussion-group/dist/even.34e802c7.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Digging Deeper Into Flow-based Generative Models" />
+<meta property="og:description" content="Summary
+In this week&rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stanniszhou.github.io/discussion-group/post/ffjord/" />
+<meta property="article:published_time" content="2019-04-04T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-04-04T00:00:00&#43;00:00"/>
+
+<meta itemprop="name" content="Digging Deeper Into Flow-based Generative Models">
+<meta itemprop="description" content="Summary
+In this week&rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution.">
+
+
+<meta itemprop="datePublished" content="2019-04-04T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-04-04T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2380">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Digging Deeper Into Flow-based Generative Models"/>
+<meta name="twitter:description" content="Summary
+In this week&rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.
+ Overview Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/discussion-group/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/discussion-group/papers/">
+        <li class="mobile-menu-item">Papers</li>
+      </a><a href="/discussion-group/schedule/">
+        <li class="mobile-menu-item">Schedule</li>
+      </a><a href="/discussion-group/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/papers/">Papers</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/schedule/">Schedule</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Digging Deeper Into Flow-based Generative Models</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-04-04 </span>
+        
+          <span class="more-meta"> 2380 words </span>
+          <span class="more-meta"> 12 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#neural-ode">Neural ODE</a>
+<ul>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#a-naive-way-to-calculate-gradients">A Naive Way to Calculate Gradients</a></li>
+<li><a href="#the-adjoint-method-continuous-analog-of-back-propagation">The Adjoint Method: Continuous Analog of Back-propagation</a></li>
+<li><a href="#applying-the-adjoint-method-to-neural-ode">Applying the Adjoint Method to Neural ODE</a></li>
+</ul></li>
+<li><a href="#ffjord">FFJORD</a>
+<ul>
+<li><a href="#continuous-normalizing-flows-cnf-as-a-generative-model">Continuous Normalizing Flows (CNF) as a Generative Model</a></li>
+<li><a href="#instantaneous-change-of-variable-formula">Instantaneous Change-of-variable Formula</a></li>
+<li><a href="#likelihood-evaluation-and-maximum-likelihood-estimation">Likelihood Evaluation and Maximum Likelihood Estimation</a></li>
+<li><a href="#trace-calculation-and-hutchinson-s-trace-estimator">Trace Calculation and Hutchinson&rsquo;s Trace Estimator</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<div class="admonition abstract"><p class="admonition-title">Summary</p>
+  <p>In this week&rsquo;s meeting, we discussed free-form Jacobian of reversible dynamics (FFJORD)[1], and the closely related neural ordinary differential equation (neural ODE)[2]. In this blog post, we summarize the main points of these two papers.</p>
+
+</div>
+
+<h1 id="overview">Overview</h1>
+
+<p>Recall that the essential idea of flow-based generative models is to model a complicated target distribution as the result of applying a reversible differentiable transformation to some simple base distribution. The base distribution should be easy to sample from, so that we can apply the differentiable transformation and get a sample from the target distribution. We should be able to easily evaluate the likelihood of the base distribution and the determinant of the Jacobian of the differentiable transformation, so that we can apply the change-of-variable formula and get the exact likelihood for the target distribution.</p>
+
+<p>Traditional flow-based generative models place awkward restrictions on the reversible differentiable transformations, so as to make the evaluation of the determinant of the Jacobian efficient. From the perspective of generative models, the key contribution of neural ODE and FFJORD is the introduction of Continuous Normalizing Flows (CNF), which is a continuous analog of normalizing flows. It provides us with a richer family of generative models while maintaining computational efficiency.</p>
+
+<p>In what follows, we are going to present some background materials on neural ODE, to set the stage for our discussion. Then we are going to talk about CNF and the trick (Hutchinson&rsquo;s trace estimator) used in FFJORD for the efficient evaluation of exact likelihood.</p>
+
+<h1 id="neural-ode">Neural ODE</h1>
+
+<h2 id="setup">Setup</h2>
+
+<p>The essential idea of neural ODE is to specify ordinary differentiable equations (ODEs) whose vector fields are parametrized by neural networks, and define complicated differentiable transformations as solutions to initial value problems involving such ODEs. Concretely, the ODE is specified as
+<div>
+$$\frac{\mathrm{d} z (t)}{\mathrm{d} t} = f (z (t), t, \theta)$$
+</div>
+where $f$ represents a neural network with parameters $\theta$. Given some input $z_0$, we can define a differentiable transformation $T_{t_{0,} t_1} (z_0) = z (t_1)$ for some $t_0 &lt; t_1$, where $z (t)$ is the solution to the initial value problem
+\begin{align}
+  \frac{\mathrm{d}z(t)}{\mathrm{d} t} &amp; = f(z(t),t,\theta)\\ z(t_0) &amp; = z_0
+\end{align}
+In practice, such differentiable transformations are evaluated using numerical ODE solvers.</p>
+
+<p>To make such differentiable transformations useful, given some scalar-valued function $L$, an important problem is to calculate the gradients of $L (T_{t_0, t_1} (z_0)) = L (z (t_1))$ w.r.t. $z_0, t_0$ and $\theta$.</p>
+
+<h2 id="a-naive-way-to-calculate-gradients">A Naive Way to Calculate Gradients</h2>
+
+<p>A naive way to calculate such gradients is to make use of the operations of the ODE solver: if we think of the operations of the ODE solver as defining a neural network that&rsquo;s adapted to the initial condition and the required accuracy, we can simply record these operations and use back-propagation to calculate the gradients, much like what we do for traditional neural networks.</p>
+
+<p>The problem with this approach is that we need to store all the intermediate operations of the ODE solver, incurring high memory costs when we are dealing with complicated models.</p>
+
+<h2 id="the-adjoint-method-continuous-analog-of-back-propagation">The Adjoint Method: Continuous Analog of Back-propagation</h2>
+
+<p>The key contribution of [2] is to introduce the adjoint method as an alternative way to compute these gradients, without the need to access intermediate operations of an ODE solver. The adjoint method is a continuous analog of the back-propagation algorithm.</p>
+
+<p>To simplify the presentation, assume we are working with the ODE
+\[ \frac{\mathrm{d} h (t)}{\mathrm{d} t} = g (h (t)) \]
+and we have some scalar-valued function $L$. Given some $t_1 &gt; 0$, the key insight of the adjoint method is that the evolution of the so-called adjoint $a (t) = \frac{\partial L (h (t_1))}{\partial h (t)}$ (a column vector in our presentation) can be described by another ODE
+\[ \frac{\mathrm{d} a (t)}{\mathrm{d} t} = - \left[ \frac{\partial g (h (t))}{\partial h (t)} \right]^T a (t) \]
+where $\frac{\partial g (h (t))}{\partial h (t)}$ is the Jacobian matrix. Note that the adjoint method is necessary because for $t \neq t_1$,
+\[ a (t) = \frac{\partial L (h (t_1))}{\partial h (t)} = \left[ \frac{\partial h (t_1)}{\partial h (t)} \right]^T \frac{\partial L (h (t_1))}{\partial h (t_1)} \]
+We can readily evaluate $\frac{\partial L (h (t_1))}{\partial h (t_1)}$, but the Jacobian matrix $\frac{\partial h (t_1)}{\partial h (t)}$ is nontrivial to calculate.</p>
+
+<p>Using the adjoint method, for some given $h_1$ at $t_1$, we can evaluate $a (t_0) = \frac{\partial L (h (t_1))}{\partial h (t_0)}$ by applying an ODE solver to the initial value problem
+\begin{align}
+  \frac{\mathrm{d}}{\mathrm{d} t} \begin{bmatrix}
+    h (t)\\ a (t)
+\end{bmatrix} &amp; =  \begin{bmatrix}
+    g (h(t))\\ - \left[ \frac{\partial g (h (t))}{\partial h (t)} \right]^T a (t)
+\end{bmatrix}\\ \begin{bmatrix}
+    h (t_1)\\ a (t_1)
+\end{bmatrix} &amp; = \begin{bmatrix}
+    h_1\\ \frac{\partial L (h_1)}{\partial h_1}
+\end{bmatrix}
+\end{align}</p>
+
+<h2 id="applying-the-adjoint-method-to-neural-ode">Applying the Adjoint Method to Neural ODE</h2>
+
+<p>To apply the adjoint method to calculate the gradients in neural ODE, the key is to note that we can regard $t$ and $\theta$ as also part of the states, and obtain an augmented ODE
+\[ \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c}
+     z (t)\\ t\\ \theta
+   \end{array}\right] = \left[\begin{array}{c}
+     f (z (t), t, \theta)\\ 1\\ 0
+   \end{array}\right] \]
+For a scalar-valued function $L$, applying the adjoint method, the ODE for $\frac{\partial L (z (t_1))}{\partial z}, \frac{\partial L (z (t_1))}{\partial t}, \frac{\partial L (z (t_1))}{\partial \theta}$ is given by
+\begin{align}
+  \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c}
+    \frac{\partial L (z (t_1))}{\partial z (t)}\\ \frac{\partial L (z (t_1))}{\partial t}\\ \frac{\partial L (z (t_1))}{\partial \theta}
+  \end{array}\right] &amp; = - \left[\begin{array}{ccc}
+    \frac{\partial f (z (t), t, \theta)}{\partial z (t)} &amp; \frac{\partial f (z (t), t, \theta)}{\partial t} &amp; \frac{\partial f (z (t), t, \theta)}{\partial \theta}\\ 0 &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 0
+  \end{array}\right]^T \left[\begin{array}{c}
+    \frac{\partial L (z (t_1))}{\partial z (t)}\\ \frac{\partial L (z (t_1))}{\partial t}\\ \frac{\partial L (z (t_1))}{\partial \theta}
+  \end{array}\right]\\ &amp; = - \left[\begin{array}{c}
+    \left[ \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}\\ \left[ \frac{\partial f (z (t), t, \theta)}{\partial t} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}\\ \left[ \frac{\partial f (z (t), t, \theta)}{\partial \theta} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}
+  \end{array}\right]
+\end{align}
+Given some $z_1$ and $t_1$, we can evaluate $\frac{\partial L (z (t_1))}{\partial z (t_0)}, \frac{\partial L (z (t_1))}{\partial t}, \frac{\partial L (z (t_1))}{\partial \theta}$ by applying the adjoint method, solving the initial value problem
+\begin{align}
+  \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c}
+    z (t)\\ \frac{\partial L (z (t_1))}{\partial z (t)}\\ \frac{\partial L (z (t_1))}{\partial t}\\ \frac{\partial L (z (t_1))}{\partial \theta}
+  \end{array}\right] &amp; = \left[\begin{array}{c}
+    f (z (t), t, \theta)\\ - \left[ \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}\\ - \left[ \frac{\partial f (z (t), t, \theta)}{\partial t} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}\\ - \left[ \frac{\partial f (z (t), t, \theta)}{\partial \theta} \right]^T \frac{\partial L (z (t_1))}{\partial z (t)}
+  \end{array}\right]\\ \left[\begin{array}{c}
+    z (t_1)\\ \frac{\partial L (z (t_1))}{\partial z (t_1)}\\ \frac{\partial L (z (t_1))}{\partial t_1}\\ \frac{\partial L (z (t_1))}{\partial \theta}
+  \end{array}\right] &amp; = \left[\begin{array}{c}
+    z_1\\ \frac{\partial L (z_1)}{\partial z_1}\\ \left[ \frac{\partial L (z_1)}{\partial z_1} \right]^T f (z (t_1), t_1, \theta)\\ 0
+  \end{array}\right]
+\end{align}</p>
+
+<h1 id="ffjord">FFJORD</h1>
+
+<h2 id="continuous-normalizing-flows-cnf-as-a-generative-model">Continuous Normalizing Flows (CNF) as a Generative Model</h2>
+
+<p>The essential idea of CNF is to use a neural ODE as the reversible differentiable transformation. Concretely, the sampling process is done by first sampling $z_0$ from some simple base distribution, and then solve the initial value problem
+\begin{align}
+  \frac{\mathrm{d} z (t)}{\mathrm{d} t} &amp; = f (z (t), t, \theta)\\ z (t_0) &amp; = z_0
+\end{align}
+and use $z (t_1)$ for some given $t_1$ as the sample from the CNF.</p>
+
+<h2 id="instantaneous-change-of-variable-formula">Instantaneous Change-of-variable Formula</h2>
+
+<p>An important aspect of flow-based generative models is the ability to evaluate the exact likelihood. For CNF, this is made possible by the so-called instantaneous change-of-variable formula.</p>
+
+<p>To understand this formula, assume we have a system whose dynamics is described by the ODE
+\[ \frac{\mathrm{d} z (t)}{\mathrm{d} t} = f (z (t), t, \theta) \]
+If we start with some probability distribution $p_0 (z)$ at some initial time $t_0$, using $p (z, t)$ to denote the probability that we find the system in state $z$ at time $t$, the evolution of $p (z, t)$ is described by the Liouville equation
+\[ \frac{\partial p (z, t)}{\partial t} = -\text{tr} \left( \frac{\partial}{\partial z} [f (z, t, \theta) p (z, t)] \right) \]
+If we can solve this PDE with initial condition $p (z, 0) = p_0 (z)$, we would also be able to evaluate the exact likelihood. But in practice, numerical solution of this PDE won&rsquo;t be practical for complicated systems.</p>
+
+<p>The key insight of the so-called instantaneous change-of-variable formula is that, if, instead of trying to directly solve for $p (z, t)$, we look at a simpler function $q (t) = p (z (t), t)$, where the dynamics of $z (t)$ is given by
+\[ \frac{\mathrm{d} z (t)}{\mathrm{d} t} = f (z (t), t, \theta) \]
+we can avoid solving any PDEs and instead need to solve only an ODE. Concretely, following the derivations in Appendix A.2 of [2], we can see that
+\begin{align}
+&amp; \frac{\mathrm{d} q (t)}{\mathrm{d} t}\\ = &amp; \left[ \frac{\partial p (z (t), t)}{\partial z (t)} \right]^T \frac{\partial z (t)}{\partial t} + \frac{\partial p (z (t), t)}{\partial t}\\ = &amp; \left[ \frac{\partial p (z (t), t)}{\partial z (t)} \right]^T \frac{\partial z (t)}{\partial t} -\text{tr} \left( \frac{\partial}{\partial z (t)} [f (z (t), t, \theta) p (z (t), t)] \right) (\text{Liouville})\\ = &amp; \left[ \frac{\partial p (z (t), t)}{\partial z (t)} \right]^T \frac{\partial z (t)}{\partial t} -\text{tr} \left( \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right) p (z (t), t) - \left[ \frac{\partial p (z (t), t)}{\partial z (t)} \right]^T f (z (t), t, \theta)\\ = &amp; -\text{tr} \left( \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right) q (t)
+\end{align}
+This implies that
+\[ \frac{\mathrm{d} \log q (t)}{\mathrm{d} t} = -\text{tr} \left( \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right) \]
+which is the so-called instantaneous change-of-variable formula.</p>
+
+<p>Using this formula, to solve for $q (t)$, we can simply look at the ODE
+\[ \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c}
+     z (t)\\ \log q (t) \end{array}\right] = \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c} z (t)\\ \log p (z (t), t)
+   \end{array}\right] = \left[\begin{array}{c}
+     f (z (t), t, \theta)\\ -\text{tr} \left( \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right)
+     \end{array}\right] \]</p>
+
+<h2 id="likelihood-evaluation-and-maximum-likelihood-estimation">Likelihood Evaluation and Maximum Likelihood Estimation</h2>
+
+<p>Coming back to the setting of a generative model, assume our base distribution is given by $p_0 (z)$, and our reversible differentiable transformation is given by the neural ODE
+\[ \frac{\mathrm{d} z (t)}{\mathrm{d} t} = f (z (t), t, \theta) \]
+with start time $t_0$ and end time $t_1$. In order to make this generative model useful, we need to be able to</p>
+
+<ol>
+<li>Evaluate the exact log-likelihood for a given sample $z_1$</li>
+<li>Calculate the gradient of the log-likelihood w.r.t. the parameter $\theta$ for maximum likelihood estimation using gradient-based methods</li>
+</ol>
+
+<p>The exact log-likelihood function at time $t_1$ is given by $\log p (z, t_1)$.
+Define
+\[ \Delta l (t) = \log p (z (t_1), t_1) - \log p (z (t), t) \]
+Using the instantaneous change-of-variable formula, it&rsquo;s easy to see that
+\[ \frac{\mathrm{d}}{\mathrm{d} t} \left[\begin{array}{c}
+     z (t)\\ \Delta l (t)
+   \end{array}\right] = \left[\begin{array}{c}
+     f (z (t), t, \theta)\\ \text{tr} \left( \frac{\partial f (z (t), t, \theta)}{\partial z (t)} \right)
+   \end{array}\right] \]
+Solving this ODE with initial condition
+\[ \left[\begin{array}{c}
+     z (t_1)\\ \Delta l (t_1)
+   \end{array}\right] = \left[\begin{array}{c}
+     z_1\\ 0
+   \end{array}\right] \]
+gives us $z (t_0)$ and $\Delta l (t_0)$. Note that $\log p (z (t_1), t_1)$ is equal to a scalar-valued function $L$ operating on $\left[\begin{array}{c}
+  z (t)\\ \Delta l (t)
+\end{array}\right]$ at time $t$, where
+\[ L \left( \left[\begin{array}{c}
+     z (t)\\ \Delta l (t)
+   \end{array}\right] \right) = \log p (z (t), t) + \Delta l (t) \]
+In particular, since we know $p (z, t_0) = p_0 (z)$, we can evaluate $\log p (z (t_1), t_1)$ as
+\[ \log p (z (t_1), t_1) = L \left( \left[\begin{array}{c}
+     z (t)\\ \Delta l (t)
+   \end{array}\right] \right) =\log p_0 (z (t_0)) + \Delta l (t_0) \]
+Furthermore, $L$ is just some scalar-valued function operating on the state of this ODE, so we can easily apply the adjoint method to calculate its gradients w.r.t. $z_1, t$ and, in particular, $\theta$. Being able to calculate the gradients w.r.t. $\theta \,$ allows us to use gradient-based methods for maximum likelihood estimation.</p>
+
+<h2 id="trace-calculation-and-hutchinson-s-trace-estimator">Trace Calculation and Hutchinson&rsquo;s Trace Estimator</h2>
+
+<p>In order to carry out the exact log-likelihood evaluation and maximum likelihood estimation, we need to be able to evaluate the trace $\text{tr} \left( \frac{\partial f (z, t, \theta)}{\partial z} \right)$. In the CNF presented in [2], this is done in a naive way using automatic differentiation. The problem with this naive approach is that it&rsquo;s not very efficient: in order to calculate the trace, for a $D$ dimensional system, we need to do $D$ forward/backward passes, using $f_i (z, t, \theta), i = 1, \ldots, D$ as the loss function in each pass.</p>
+
+<p>The key contribution of FFJORD is the use of the so-called Hutchinson&rsquo;s trace estimator to make the trace evaluation more efficient. The Hutchinson&rsquo;s trace estimator comes from the simple observation that, for any $D \times D$ square matrix $A$, if we have a $D$-dimensional random vector $\varepsilon$ which satisfies $\mathbb{E} (\varepsilon) = 0$ and $\text{Cov} (\varepsilon) = I$, then
+\[ \mathbb{E} (\varepsilon^T A \varepsilon) =\mathbb{E} \left[ \sum_{i, j = 1}^D A_{ij} \varepsilon_i \varepsilon_j \right] = \sum_{i, j = 1}^D A_{ij} \mathbb{E} (\varepsilon_i \varepsilon_j) =\text{trace} (A) \]
+This means we can estimate $\text{trace} (A)$ using a Monte Carlo estimator $\frac{1}{N} \sum_{i = 1}^N \varepsilon^{(i) T} A \varepsilon^{(i)}$, where $\varepsilon^{(1)}, \ldots, \varepsilon^{(N)}$ are i.i.d. samples of the random vector $\varepsilon$.</p>
+
+<p>The efficiency gain comes from the fact that vector-Jacobian product $v^T \frac{\partial f (z, t, \theta)}{\partial z}$ is much faster to calculate: instead of $D$ forward/backward passes, we can use only one pass with $v^T f (z, t, \theta)$ as the loss function to get the vector-Jacobian product, and use a subsequent vector dot product to evaluate $v^T \frac{\partial f (z, t, \theta)}{\partial z} v$, for any $D$-dimensional vector $v$. This makes FFJORD much more efficient than vanilla CNF when $D$ is large.</p>
+
+<h1 id="references">References</h1>
+
+<p>[1] Grathwohl, Will, Ricky T. Q. Chen, Jesse Bettencourt, Ilya Sutskever, and David Duvenaud. 2018. “FFJORD: Free-Form Continuous Dynamics for Scalable Reversible Generative Models.” arXiv [cs.LG]. arXiv. <a href="http://arxiv.org/abs/1810.01367">http://arxiv.org/abs/1810.01367</a>. <a href="https://arxiv.org/abs/1810.01367">link</a></p>
+
+<p>[2] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2018. “Neural Ordinary Differential Equations.” arXiv [cs.LG]. arXiv. <a href="http://arxiv.org/abs/1806.07366">link</a></p>
+
+    </div>
+
+<script>talkyardServerUrl='https:\/\/comments-for-stanniszhou-github-io.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Guangyao Zhou</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-04-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/discussion-group/post/gan-empirical/">
+            <span class="next-text nav-default">GANs that work well empirically</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/StannisZhou/discussion-group" class="iconfont icon-github" title="github"></a>
+  <a href="https://stanniszhou.github.io/discussion-group/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> site pv: <span id="busuanzi_value_site_pv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> site uv: <span id="busuanzi_value_site_uv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">olOwOlo</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stanniszhou.github.io/discussion-group/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
