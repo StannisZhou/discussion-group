@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Guangyao (Stannis) Zhou">
+  <title>Computability of Conditional Probability</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+	div.plotly-graph-div {
+	  margin-right: auto;
+	  margin-left: auto;
+	}
+	.reveal p.author {
+		text-align: center;
+	}
+	.reveal p.date {
+		text-align: center;
+	}
+	.reveal p.subtitle {
+		text-align: center;
+	}
+	.reveal ul {
+		display: block;
+	}
+	.reveal ol {
+		display: block;
+	}
+  </style>
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/solarized.css" id="theme">
+  <link rel="stylesheet" href="custom.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'http://lab.hakim.se/reveal-js/css/print/pdf.css' : 'http://lab.hakim.se/reveal-js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Computability of Conditional Probability</h1>
+  <p class="subtitle">Division of Applied Math, Brown University</p>
+  <p class="author">Guangyao (Stannis) Zhou</p>
+  <p class="date">April 25th, 2019</p>
+</section>
+<section id="TOC">
+	<p style="text-align: left; font-size: 150%"> Outline </p>
+
+<ul>
+<li><a href="#/overview">Overview</a></li>
+<li><a href="#/computable-probability-theory">Computable Probability Theory</a></li>
+<li><a href="#/computable-conditional-distributions">Computable Conditional Distributions</a></li>
+<li><a href="#/negative-and-positive-examples">Negative and Positive Examples</a></li>
+<li><a href="#/discussions">Discussions</a></li>
+</ul>
+</section>
+
+<section><section id="overview" class="titleslide slide level2" style="font-size: 200%"><h2>Overview</h2></section><section id="computability-of-probability-distributions" class="slide level3" style="font-size: 90%">
+<h3>Computability of Probability Distributions</h3>
+<ul>
+<li>Class of computable probability distributions
+<ul>
+<li>A <strong>probabilistic Turing machine</strong></li>
+<li>Can <strong>sample to arbitrary accuracy</strong></li>
+</ul></li>
+<li>Formalize the concept of computability using theory of <strong>computable metric spaces</strong></li>
+<li>Central message:
+<p style="text-align: center; font-size: 100%">
+There exist <strong>computable</strong> joint distributions with <strong>noncomputable</strong> conditional distributions
+</p></li>
+</ul>
+</section><section id="a-simple-example" class="slide level3">
+<h3>A Simple Example</h3>
+<ul>
+<li>Latent random variables:
+<ul>
+<li><span class="math inline">\(C\sim\text{Bernoulli}(\frac{1}{2})\)</span></li>
+<li><span class="math inline">\(U\sim\text{Uniform}([0,1])\)</span></li>
+<li><span class="math inline">\(N\sim\text{Geometric}(\frac{1}{2})\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\{r_i\}_{i\in\mathbb{N}}\)</span>: computable enumeration of <span class="math inline">\(\mathbb{Q}\cap(0, 1)\)</span></li>
+<li>Observed random variable:
+<span class="math display">\[\begin{equation}
+X = \begin{cases}
+U &amp; \text{if }C = 1 \\
+r_N &amp; \text{otherwise}
+\end{cases}
+\end{equation}\]</span></li>
+<li>Claim: <span class="math inline">\(\mathbb{P}(C|X)\)</span> is not &quot;computable&quot;</li>
+</ul>
+</section><section id="a-first-look-at-the-simple-example" class="slide level3">
+<h3>A First Look at the Simple Example</h3>
+<ul>
+<li>Some direct calculations
+<ul>
+<li><span class="math inline">\(\mathbb{P}(C=0|X\text{ rational}) = 1\)</span></li>
+<li><span class="math inline">\(\mathbb{P}(C=0|X\text{ irrational}) = 0\)</span></li>
+</ul></li>
+<li>The conditional &quot;probability kernel&quot;:
+<ul>
+<li><span class="math inline">\(k(x, \{0\}) = \begin{cases}1 &amp; x\text{ rational }\\0 &amp; x\text{ irrational}\end{cases}\)</span></li>
+<li>The Dirichlet function, a <em>nowhere continuous</em> function</li>
+</ul></li>
+<li>Computability implies continuity, so discontinuity implies noncomputability</li>
+</ul>
+</section></section>
+<section><section id="computable-probability-theory" class="titleslide slide level2"><h2>Computable Probability Theory</h2></section><section id="computably-enumerable-c.e.-and-c.e.-reals" class="slide level3">
+<h3>Computably Enumerable (c.e.) and C.e. Reals</h3>
+<ul>
+<li>A (potentially countably infinite) set is <em>computably enumerable</em> (c.e.) when there is a program that outputs every element of the set eventually</li>
+<li>A real number <span class="math inline">\(r\)</span> is c.e. when both <span class="math inline">\(\{q\in\mathbb{Q}: q &lt; r\}\)</span> and <span class="math inline">\(\{q\in\mathbb{Q}: q &gt; r\}\)</span> are c.e.</li>
+<li>Intuitively, <span class="math inline">\(r\)</span> is c.e. if we can write a program which can approximate <span class="math inline">\(r\)</span> to arbitrary accuracy</li>
+</ul>
+</section><section id="computable-metric-spaces" class="slide level3">
+<h3>Computable Metric Spaces</h3>
+<ul>
+<li>A computable metric space is a triple <span class="math inline">\((S, \delta, \mathcal{D})\)</span>
+<ul>
+<li><span class="math inline">\(\delta\)</span> is a metric on the set <span class="math inline">\(S\)</span></li>
+<li><span class="math inline">\((S, \delta)\)</span> is a complete separable metric space</li>
+<li><span class="math inline">\(\mathcal{D} = \{s_i\}_{i\in\mathbb{N}}\)</span> is an enumeration of a dense subset of <span class="math inline">\(S\)</span>, called <strong>ideal points</strong></li>
+<li>The real numbers <span class="math inline">\(\delta(s_i, s_j)\)</span> are c.e./computable, uniformly in <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></li>
+</ul></li>
+<li>The <strong>ideal balls of <span class="math inline">\(S\)</span></strong>:
+<span class="math display">\[\begin{equation}
+\mathcal{B}_S = \{B(s_i, q_j): s_i\in\mathcal{D}, q_j\in\mathbb{Q}, q_j &gt; 0\}
+\end{equation}\]</span>
+<span class="math inline">\(B(s_i, q_j)\)</span> denotes the ball of radius <span class="math inline">\(q_j\)</span> centered at <span class="math inline">\(s_i\)</span>.</li>
+</ul>
+</section><section id="computable-point" class="slide level3">
+<h3>Computable Point</h3>
+<ul>
+<li>A point <span class="math inline">\(x\in S\)</span> is computable when there's a program that enumerates a sequence <span class="math inline">\(\{x_i\}\subset\mathcal{D}\)</span> where <span class="math display">\[\delta(x_i, x)&lt;2^{-i}, \forall i\]</span></li>
+<li>Intuitively, a point is computable when we can write a program that approximates the point to arbitrary accuracy</li>
+</ul>
+</section><section id="computable-partial-function" class="slide level3">
+<h3>Computable Partial Function</h3>
+<ul>
+<li>An open set <span class="math inline">\(U\)</span> is c.e. open when there is some c.e. set <span class="math inline">\(E\subset\mathbb{N}\)</span> such that <span class="math inline">\(U=\cup_{i\in E}B_i\)</span></li>
+<li>Assume <span class="math inline">\((S, \delta_S, \mathcal{D}_S)\)</span> and <span class="math inline">\((T, \delta_T, \mathcal{D}_T)\)</span> are computable metric spaces, and <span class="math inline">\(\{B_n\}_{n\in\mathbb{N}}\)</span> is an enumeration of <span class="math inline">\(\mathcal{B}_T\)</span></li>
+<li>A function <span class="math inline">\(f: S \rightarrow T\)</span> is said to be computable on <span class="math inline">\(R\subset S\)</span> if there is a computable sequence <span class="math inline">\(\{U_n\}_{n\in\mathbb{N}}\)</span> of c.e. open sets <span class="math inline">\(U_n \subset S\)</span> such that <span class="math display">\[f^{-1}(B_n)\cap R=U_n\cap R, \forall n\in\mathbb{N}\]</span></li>
+</ul>
+</section><section id="computable-partial-function-1" class="slide level3">
+<h3>Computable Partial Function</h3>
+<ul>
+<li>A function <span class="math inline">\(f: S \rightarrow T\)</span> is said to be computable on <span class="math inline">\(R\subset S\)</span> if there is a computable sequence <span class="math inline">\(\{U_n\}_{n\in\mathbb{N}}\)</span> of c.e. open sets <span class="math inline">\(U_n \subset S\)</span> such that <span class="math display">\[f^{-1}(B_n)\cap R=U_n\cap R, \forall n\in\mathbb{N}\]</span></li>
+<li>Computability implies continuity</li>
+<li>Intuition: given a computable <span class="math inline">\(x\)</span>, we can write program to approximate <span class="math inline">\(f(x)\)</span> to arbitrary accuracy</li>
+</ul>
+</section><section id="computable-random-variables" class="slide level3">
+<h3>Computable Random Variables</h3>
+<ul>
+<li>Underlying probability space: <span class="math inline">\((\{0, 1\}^{\infty}, \mathcal{F}, \mathbb{P})\)</span>
+<ul>
+<li><span class="math inline">\(\mathbb{P}\)</span>: (infinite) product measure of the uniform distribution on <span class="math inline">\(\{0, 1\}\)</span></li>
+<li>An infinite sequence of fair coin tosses</li>
+</ul></li>
+<li>Random variable <span class="math inline">\(X\)</span> taking values in computable metric space <span class="math inline">\(S\)</span>
+<ul>
+<li><span class="math inline">\(X\)</span> is a function from <span class="math inline">\((\{0, 1\}^{\infty}, \mathcal{F}, \mathbb{P})\)</span> to <span class="math inline">\(S\)</span></li>
+<li><span class="math inline">\(X\)</span> is a computable random variable if this function is computable</li>
+</ul></li>
+<li>Common random variables are all computable</li>
+</ul>
+</section><section id="computable-probability-measures" class="slide level3">
+<h3>Computable Probability Measures</h3>
+<ul>
+<li><span class="math inline">\((S, \delta, \mathcal{D}_S)\)</span>: a computable metric space</li>
+<li><span class="math inline">\(\mathcal{M}_1(S)\)</span>: set of all (Borel) probability measures on <span class="math inline">\(S\)</span></li>
+<li>Define <span class="math inline">\(\mathcal{D}_P\subset \mathcal{M}_1(s)\)</span> to be the set of probabilities measures that are concentrated on a finite subset of <span class="math inline">\(\mathcal{D}_S\)</span> and have rational measure for each atom</li>
+<li>Using the so-called Prokhorov metric <span class="math inline">\(\delta_P\)</span>, we can define a computable metric space <span class="math inline">\((\mathcal{M}_1(S), \delta_P, \mathcal{D}_p)\)</span></li>
+<li>We say <span class="math inline">\(\mu\in\mathcal{M}_1(S)\)</span> is a computable probability measure if it's a computable point in this space</li>
+</ul>
+</section><section id="computable-probability-measures-1" class="slide level3">
+<h3>Computable Probability Measures</h3>
+<ul>
+<li>All computable random variables induce computable probability measures</li>
+<li>For any computable probability measures, we can identify a sequence of i.i.d. computable random variables</li>
+</ul>
+</section></section>
+<section><section id="computable-conditional-distributions" class="titleslide slide level2"><h2>Computable Conditional Distributions</h2></section><section id="conditioning-w.r.t.-a-single-event" class="slide level3">
+<h3>Conditioning w.r.t. a Single Event</h3>
+<ul>
+<li>Let <span class="math inline">\(S\)</span> be a measurable space and let <span class="math inline">\(\mu\in\mathcal{M}_1(S)\)</span></li>
+<li>For some event <span class="math inline">\(A\subset S\)</span> s.t. <span class="math inline">\(\mu(A) &gt; 0\)</span>, the conditional probability of <span class="math inline">\(B\subset S\)</span> given <span class="math inline">\(A\)</span> is <span class="math display">\[\mu(B|A)=\frac{\mu(B\cap A)}{\mu(A)}\]</span></li>
+</ul>
+</section><section id="conditioning-w.r.t.-a-single-event-1" class="slide level3">
+<h3>Conditioning w.r.t. a Single Event</h3>
+<ul>
+<li>Assume <span class="math inline">\((S, \mu)\)</span> is a computable probability space
+<ul>
+<li><span class="math inline">\(\mu\)</span> is a computable probability measure</li>
+<li><span class="math inline">\(A\subset S\)</span> is called almost decidable if there are c.e. open sets <span class="math inline">\(U\subset A\)</span>, <span class="math inline">\(V\subset S/A\)</span>, and <span class="math inline">\(\mu(U)+\mu(V)=1\)</span></li>
+<li><span class="math inline">\(\mu\)</span> is computable <span class="math inline">\(\iff\)</span> <span class="math inline">\(\mu(A)\)</span> is c.e. real whenever <span class="math inline">\(A\)</span> is almost decidable</li>
+</ul></li>
+<li><span class="math inline">\(A\)</span> is almost decidable <span class="math inline">\(\implies\)</span> <span class="math inline">\(\mu(\cdot|A)\)</span> is a computable probability measure</li>
+</ul>
+</section><section id="probability-kernel" class="slide level3">
+<h3>Probability Kernel</h3>
+<ul>
+<li>Let <span class="math inline">\(S\)</span> and <span class="math inline">\(T\)</span> be measurable spaces</li>
+<li>A function <span class="math inline">\(k: S\times\mathcal{B}_T\rightarrow[0, 1]\)</span> is called a probability kernel when
+<ul>
+<li><span class="math inline">\(\forall s\in S\)</span>, <span class="math inline">\(k(s, \cdot)\)</span> is a probability measure on <span class="math inline">\(T\)</span></li>
+<li><span class="math inline">\(\forall B\in\mathcal{B}_T\)</span>, the function <span class="math inline">\(k(\cdot, B)\)</span> is measurable</li>
+</ul></li>
+</ul>
+</section><section id="regular-conditional-distribution" class="slide level3">
+<h3>Regular Conditional Distribution</h3>
+<ul>
+<li>Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables in measurable spaces <span class="math inline">\(S\)</span> and <span class="math inline">\(T\)</span></li>
+<li>A probability kernel <span class="math inline">\(k\)</span> is called a regular version of the conditional distribution <span class="math inline">\(\mathbb{P}(Y\in\cdot|X)\)</span> when <span class="math display">\[\mathbb{P}(X\in A, Y\in B)=\int_A k(x, B)\mathcal{P}_X(d x)\]</span> for all measurable sets <span class="math inline">\(A\subset S\)</span> and <span class="math inline">\(B\subset T\)</span></li>
+</ul>
+</section><section id="computable-probability-kernel" class="slide level3">
+<h3>Computable Probability Kernel</h3>
+<ul>
+<li><span class="math inline">\(S\)</span> and <span class="math inline">\(T\)</span>: computable metric spaces</li>
+<li><span class="math inline">\(k: S\times\mathcal{B}_T\rightarrow[0, 1]\)</span>: a probability kernel from <span class="math inline">\(S\)</span> to <span class="math inline">\(T\)</span></li>
+<li>Define <span class="math inline">\(\phi_k: S\rightarrow \mathcal{M}_1(T)\)</span> to be <span class="math inline">\(\phi_k(s) = k(s, \cdot)\)</span></li>
+<li><span class="math inline">\(k\)</span> is a computable probability kernel when <span class="math inline">\(\phi_k\)</span> is a computable function</li>
+</ul>
+</section></section>
+<section><section id="negative-and-positive-examples" class="titleslide slide level2"><h2>Negative and Positive Examples</h2></section><section id="back-to-the-simple-example" class="slide level3">
+<h3>Back to the Simple Example</h3>
+<ul>
+<li>Latent random variables:
+<ul>
+<li><span class="math inline">\(C\sim\text{Bernoulli}(\frac{1}{2})\)</span></li>
+<li><span class="math inline">\(U\sim\text{Uniform}([0,1])\)</span></li>
+<li><span class="math inline">\(N\sim\text{Geometric}(\frac{1}{2})\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\{r_i\}_{i\in\mathbb{N}}\)</span>: computable enumeration of <span class="math inline">\(\mathbb{Q}\cap(0, 1)\)</span></li>
+<li>Observed random variable:
+<span class="math display">\[\begin{equation}
+X = \begin{cases}
+U &amp; \text{if }C = 1 \\
+r_N &amp; \text{otherwise}
+\end{cases}
+\end{equation}\]</span></li>
+</ul>
+</section><section id="back-to-the-simple-example-1" class="slide level3">
+<h3>Back to the Simple Example</h3>
+<ul>
+<li>Want to study <span class="math inline">\(\mathbb{P}(C|X)\)</span></li>
+<li>Using previous notations, <span class="math inline">\(S=[0, 1]\)</span>, <span class="math inline">\(T=\{0, 1\}\)</span></li>
+<li><span class="math inline">\(\mathcal{M}_1(T)\)</span> is equivalent to <span class="math inline">\([0, 1]\)</span></li>
+<li>The conditional probability kernel:
+<ul>
+<li><span class="math inline">\(k(x, \{0\}) = \begin{cases}1 &amp; x\text{ rational }\\0 &amp; x\text{ irrational}\end{cases}\)</span></li>
+<li>The Dirichlet function, a <em>nowhere continuous</em> function</li>
+</ul></li>
+<li>Discontinuity implies noncomputability</li>
+</ul>
+</section><section id="more-negative-examples" class="slide level3">
+<h3>More Negative Examples</h3>
+<ul>
+<li>An example where the conditional distribution has a version that's continuous <strong>almost everywhere</strong>, yet still not computable</li>
+<li>An example where the conditional distribution has a version that's continuous <strong>everywhere</strong>, yet still not computable</li>
+</ul>
+</section><section id="positive-examples" class="slide level3">
+<h3>Positive Examples</h3>
+<ul>
+<li>Conditioning on discrete random variables is always computable</li>
+<li>Conditioning is computable when there's a conditional density</li>
+</ul>
+</section><section id="positive-examples-1" class="slide level3">
+<h3>Positive Examples</h3>
+<ul>
+<li>Conditioning on noisy observations is computable:
+<ul>
+<li>Assume <span class="math inline">\(U, V\)</span> are computable random variables</li>
+<li>Assume <span class="math inline">\(E\)</span> is a computable random variable which has a bounded computable density and is independent of <span class="math inline">\(U, V\)</span></li>
+<li>Can think of <span class="math inline">\(U + E\)</span> as the corruption of an idealized measurement <span class="math inline">\(U\)</span> by independent source of additive error <span class="math inline">\(E\)</span></li>
+<li><span class="math inline">\(\mathbb{P}(U, V|U + E)\)</span> is computable</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="discussions" class="titleslide slide level2" style="font-size: 250%"><h2>Discussions</h2></section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+	  math: {
+		  // mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+		  config: 'TeX-AMS_HTML-full'
+	  },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/math/math.js', async: true },
+        ]
+      });
+    </script>
+    </body>
+</html>
