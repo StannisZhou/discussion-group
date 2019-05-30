@@ -50,6 +50,16 @@ For questions, please contact Guangyao Zhou.</description>
     </item>
     
     <item>
+      <title>Problems and Advances of Wasserstein GAN</title>
+      <link>https://stanniszhou.github.io/discussion-group/post/wgan/</link>
+      <pubDate>Thu, 11 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://stanniszhou.github.io/discussion-group/post/wgan/</guid>
+      <description>Introduction Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]). However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].
+The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite).</description>
+    </item>
+    
+    <item>
       <title>Digging Deeper Into Flow-based Generative Models</title>
       <link>https://stanniszhou.github.io/discussion-group/post/ffjord/</link>
       <pubDate>Thu, 04 Apr 2019 00:00:00 +0000</pubDate>

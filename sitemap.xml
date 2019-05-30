@@ -24,6 +24,13 @@
   </url>
   
   <url>
+    <loc>https://stanniszhou.github.io/discussion-group/post/wgan/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://stanniszhou.github.io/discussion-group/post/ffjord/</loc>
     <lastmod>2019-04-04T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -66,7 +73,7 @@
   
   <url>
     <loc>https://stanniszhou.github.io/discussion-group/post/</loc>
-    <lastmod>2019-04-04T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Problems and Advances of Wasserstein GAN - ICERM Generative Models Discussion Group</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Jian-Zhou Zhang" /><meta name="description" content="Introduction Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]). However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].
+The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite)." /><meta name="keywords" content="ICERM, computer vision, generative models" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with even 4.0.0" />
+
+
+<link rel="canonical" href="https://stanniszhou.github.io/discussion-group/post/wgan/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/discussion-group/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/discussion-group/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/discussion-group/favicon-16x16.png">
+<link rel="manifest" href="/discussion-group/manifest.json">
+<link rel="mask-icon" href="/discussion-group/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/discussion-group/dist/even.34e802c7.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Problems and Advances of Wasserstein GAN" />
+<meta property="og:description" content="Introduction Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]). However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].
+The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stanniszhou.github.io/discussion-group/post/wgan/" />
+<meta property="article:published_time" content="2019-04-11T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-04-11T00:00:00&#43;00:00"/>
+
+<meta itemprop="name" content="Problems and Advances of Wasserstein GAN">
+<meta itemprop="description" content="Introduction Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]). However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].
+The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite).">
+
+
+<meta itemprop="datePublished" content="2019-04-11T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-04-11T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1343">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Problems and Advances of Wasserstein GAN"/>
+<meta name="twitter:description" content="Introduction Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]). However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].
+The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite)."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/discussion-group/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/discussion-group/papers/">
+        <li class="mobile-menu-item">Papers</li>
+      </a><a href="/discussion-group/schedule/">
+        <li class="mobile-menu-item">Schedule</li>
+      </a><a href="/discussion-group/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/discussion-group/" class="logo">ICERM Generative Models Discussion Group</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/papers/">Papers</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/schedule/">Schedule</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/discussion-group/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Problems and Advances of Wasserstein GAN</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-04-11 </span>
+        
+          <span class="more-meta"> 1343 words </span>
+          <span class="more-meta"> 7 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#wasserstein-gan">Wasserstein GAN</a>
+<ul>
+<li><a href="#some-definitions">Some definitions</a></li>
+<li><a href="#gan">GAN</a></li>
+<li><a href="#wasserstein-distance">Wasserstein distance</a></li>
+<li><a href="#wasserstein-gan-1">Wasserstein GAN</a></li>
+<li><a href="#some-results">Some results</a></li>
+</ul></li>
+<li><a href="#computation">Computation</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Since Generative Adversarial Nets(GAN)([1]) was proposed in 2014, there have been a lot of researches on and applications of GAN([2,3]).  However the generative and discriminative models were studied before the GAN was proposed([4]). Some problems of GAN are summarized in [5].</p>
+
+<p>The basic idea of classical GAN is to minimize the Kullback-Leibler(KL) divergence. However, it is possible that the KL divergence (or distance) can not be defined (or is simply infinite). In order to overcome the drawback, the Wasserstein distance is introduced to measure the distance between the generated distribution and the learned distribution([6]). This approach is referred to as WGAN.</p>
+
+<p>WGAN is closely related to optimal transport problem proposed by G. Monge in 1781. The optimal transport problem has been researched mathematically in [7,8]. The relationship between WGAN and optimal transport is introduced in detail in [9,10,11].</p>
+
+<p>The computation involved WGAN is a difficult problem. Some approaches are introduced in [11, 12, 13,14,15]. In [11], the optimal transport problem is solved by convex geometry. In [12,13],  entropic regularization of the primal optimal transport problem results in a smooth dual optimization which can be solved by algorithms that have a provably faster convergence. In [14], WGAN is tackled by formulating a distributionally robust stochastic optimization problem which can be solved by stochastic gradient descent. In [15], a fast and scalable algorithm to project a given density on a set of structured measure defined over a compact 2D domain is proposed. In [16], WGAN is discussed as a zero-sum game between the generator and the discriminator, and bi-linear zero-sum games are solved by optimistic mirror descent.</p>
+
+<p>In this blog, I will briefly introduce the basic concepts of WGAN and the computation involved.</p>
+
+<p>$$ \min_{G} \ \max_{D}V(D,G)= \mathbb{E}_{x\sim p_{data}(x)}\big[ \log D(x) \big] + \mathbb{E}_{z\sim p_{z}(z)} \big[ \log (1- D(G(z))) \big] $$</p>
+
+<p>By sampling from a uniform distribution, generator tries to capture the data distribution, whereas discriminator estimates whether a data sample comes from the real distribution or G. Generator is learned to maximize the probability of D making a mistake.</p>
+
+<p>Since the first paper, GAN variants have shown promising results; however, they suffer from several problems, too. The balance of generator and discriminator is difficult, and there are many situations where gradients may diminish, or the model oscillate and never converges. Even in the success case, there is no guarantee that the latent space represents each node of the real data distribution (mode collapse). Furthermore, the training of GANs is highly sensitive to hyperparameter selection.</p>
+
+<h1 id="wasserstein-gan">Wasserstein GAN</h1>
+
+<h2 id="some-definitions">Some definitions</h2>
+
+<p>$\mathcal X$ denotes the data space in $R^{p}$ (for example: image space).
+$\mathcal P(\mathcal X)$ is the space of all probability distribution on $\mathcal X$ (object image set).
+Assume the learned data distribution is $\nu \in \mathcal P(\mathcal X)$.
+In fact $\nu$ is replaced with its empirical distribution $\nu_n$ over samples
+${x_1, \dots, x_n}$，
+where $\nu_n(x)=\frac{1}{n}\sum_{i=1}^n \delta (x-x_i)$, and $\delta$ is a Dirac function or a Gaussian Parzen window function.</p>
+
+<p>A <strong>Generator</strong> learns the data distribution $\nu$. Its inputs are random noise variables $z$ with distribution $\zeta$, where $z\in \mathcal Z \subseteq R^m$ and $\zeta \in \mathcal P(\mathcal Z)$, and its outputs are $g_\theta(z)\in \mathcal X$. $g_\theta$ is realized by a deep neural network with parameters $\theta$. Because $g_\theta$ is
+ a continuous map, $g_\theta$ induces a pushforward operator $g^{f}_{\theta}$ so that $g^{f}_{\theta}\zeta \in \mathcal P(\mathcal X)$ (for any set $B\subset \mathcal X$, $g^{f}_{\theta}\zeta(B)=\zeta({z;g(z)\in B})$ ).</p>
+
+<p>A <strong>Discriminator</strong> $D(x;\eta)$ ($x\in \mathcal X$) outputs a single scalar that represents the probability that $x$ came from the data rather than $g_\theta$. $D(x;\eta)$ is realized by a deep neural network with parameters $\eta$.</p>
+
+<h2 id="gan">GAN</h2>
+
+<p>GAN is the following two-player minimax game with value function
+$$\min \limits_\theta \max \limits_\eta V(\theta,\eta)$$
+where
+$$V(\theta,\eta)=\mbox{E}_{x\sim \nu} [\log D(x;\eta)]+\mbox{E}_{z\sim \zeta} [\log (1-D(g_\theta(z);\eta))](1)$$</p>
+
+<blockquote>
+<ol>
+<li>The global minimum of Eq.1 is achieved if and only if $g^{f}_ {\theta}\zeta = \nu $.([1])</li>
+<li>At the point of global minimum of Eq.1, its value is $-\log 4$.([1])</li>
+</ol>
+</blockquote>
+
+<p>A key problem of GAN is &lsquo;mode collapse&rsquo;, where the generator does not produce points from certain modes, or for at least one mode the generator only partially covers the mode.</p>
+
+<h2 id="wasserstein-distance">Wasserstein distance</h2>
+
+<p>$$
+W_c (\mu, \nu) = \min \limits_{\gamma \in \mathcal P(\mathcal X \times \mathcal X)} {\int_{\mathcal X \times \mathcal X}c(x, y)d\gamma(x,y)}\text{    }(2)
+$$
+where $c(x,y)$: $\mathcal X \times \mathcal X \to R$ is the cost function , and for the joint distribution $\gamma(x,y)$ its first and second marginal distributions are $\mu$ and $\nu$.</p>
+
+<h2 id="wasserstein-gan-1">Wasserstein GAN</h2>
+
+<p>The discriminator uses Wasserstein distance between distributions.</p>
+
+<p>The generator is given by the Minimum Kantorovitch Estimator
+$$
+\min \limits_{\theta} E(\theta)=W_c (g^{f}_{\theta}\zeta, \nu)\text{   }(3)
+$$</p>
+
+<p>The GAN model is interpreted by the optimal transport theory which concerns the problem of connecting two probability distributions vis transportation at a minimal cost.</p>
+
+<p>Because (2) is a linear program, (3) has a dual formulation known as Kantorovich problem:
+$$
+E(\theta)= \max \limits_{h,\tilde{h}}
+{\int_{\mathcal Z}h(g_{\theta}(z))d\zeta(z)+
+\int_{\mathcal X}\tilde{h}(y)d\nu(y)}\text{   }(4)
+$$
+where $(h,\tilde{h})$ are continuous functions on $\mathcal X$ called Kantorovich potentials satisfying $h(x)+\tilde{h}\leq c(x,y)$.</p>
+
+<h2 id="some-results">Some results</h2>
+
+<ul>
+<li>The cost of any pair $(h,\tilde{h})$ can always be improved by replacing $\tilde{h}$ by the $c$-transform $h^c$ of $h$ defined as
+$$
+h^c(y)=\max \limits_{x} (c(x,y)-h(x))
+$$
+Therefore (4) can parameterize as depending on only one potential function.</li>
+<li>For $L^1$ transportation cost $c(x,y)=|x-y|$ in $R^p$, if $h$ is 1-Lipschitz (a deep neural network made of ReLU units whose Lipschitz constant is upper-bounded by 1), then $h^c=-h$.</li>
+<li>For $L^2$ transportation cost $c(x,y)=\frac{||x-y||^2}{2}$ in $R^p$, then
+$$ h^c(y)=\frac{||y||^2}{2}-\sup\limits_{x} \left(&lt;x,y&gt; - \left(\frac{||x||^2}{2}-h(x)\right)\right).
+$$</li>
+<li>If for the transportation cost $c(x,y)=h(x-y)$, where $h$ is a strictly convex function, then once the optimal discriminator is obtained, the generator can be written down in an explicit formula.</li>
+</ul>
+
+<h1 id="computation">Computation</h1>
+
+<p><strong>Approach 1</strong> Stochastic gradient descent for large-scale optimal transport. Since $\nu$ is discrete, the continuous potential $\tilde{h}$ can be replaced by the discrete vector $(\tilde{h}(y_j))$, and $h=(\tilde{h})^c$. The optimization over $\tilde{h}$ can then be achieved using Stochastic gradient descent. ([12,13])</p>
+
+<p><strong>Approach 2</strong> The dual potential $h$ is restricted to have a parametric form $h_\xi$:
+$\mathcal X\to R$, where $h_\xi$ is represented by a discriminative deep neural network. (4) is computed by (c.f. [6])
+$$
+\min \limits_{\theta} \max \limits_{\xi}
+{\int_{\mathcal Z}h_\xi(g_{\theta}(z))d\zeta(z)+
+\frac{1}{n}\sum_{j=1}^n{h_{\xi}^c(y_j)}}
+$$</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>WGAN is established on solid mathematics. Research of fast and practical algorithms computing Wasserstein distance is an important problem.</p>
+
+<h1 id="references">References</h1>
+
+<p>[1] Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio, &ldquo;Generative adversarial nets,&rdquo; International Conference on Neural Information Processing Systems (NeurIPS), 2014.</p>
+
+<p>[2] He Huang, Philip S. Yu, Changhu Wang, &ldquo;An introduction to image synthesis with generative adversarial nets,&rdquo; arXiv:1803.04469v2, 2018.</p>
+
+<p>[3] Lei Wang. Generative models for physicists. <a href="http://wangleiphy.github.io/">http://wangleiphy.github.io/</a></p>
+
+<p>[4] Ying Nian Wu, Ruiqi Gao, Tian Han, Song-Chun Zhu,
+A tale of three probabilistic families: discriminative, descriptive, and generative models, Quarterly of Applied Mathematics, 77(2): 423-465, 2019.</p>
+
+<p>[5] Augustus Odena, Open questions about generative adversarial networks ,<a href="http://distill.pub/2019/gan-open-problems/">http://distill.pub/2019/gan-open-problems/</a></p>
+
+<p>[6] Martin Arjovsky, Soumith Chintala, Léon Bottou, &ldquo;Wasserstein Generative Adversarial Networks,&rdquo; Proceedings of the 34th International Conference on Machine Learning, PMLR 70:214-223, 2017.</p>
+
+<p>[7] L. Ambrosio, &ldquo;Optimal transport maps in Monge-Kantorovich problem&rdquo;, ICM2002, arXiv: math/0304389v1, 2003.</p>
+
+<p>[8] Cédric Villani, &ldquo;Optimal transport: old and new, v.338, Springer, 2008.</p>
+
+<p>[9] Bruno Lévy, Erica L. Schwindt, &ldquo;Notions of optimal transport theory and how to implement them on a computer&rdquo;, Computers &amp; Graphics, 72: 135-148, 2018.</p>
+
+<p>[10] Aude Genevay, Gabriel Peyré, Marco Cuturi, &ldquo;GAN and VAE from an optimal transport point of view,&rdquo;  arXiv: 1706.01807, 2017.</p>
+
+<p>[11] Na Lei, Kehua Su, Li Cui, Shing-Tung Yau, Xianfeng David Gu,
+&ldquo;A geometric view of optimal transportation and generative model&rdquo;,
+Computer Aided Geometric Design, 68: 1-21, 2019.</p>
+
+<p>[12] Aude Genevay, Marco Cuturi, Gabriel Peyré, Francis Bach &ldquo;Stochastic optimization for large-scale optimal transport,&rdquo;  arXiv: 1605.08527v1, 2016.</p>
+
+<p>[13] Marco Cuturi, Gabriel Peyré,
+Semidual regularized optimal transport.
+SIAM Review, 60(4): 941-965, 2018.</p>
+
+<p>[14] Rui Gao, Xi Chen, Anton J. Kleywegt,
+Distributional robustness and regularization in statistical learning, arXiv:1712.06050v2, 2017.</p>
+
+<p>[15] Léo Lebrat, Frédéric de Gournay, Jonas Kahn, Pierre Weiss, &ldquo;Optimal transport approximation of 2-dimensional measures&rdquo;, SIAM J. Imaging Sciences, 12(2): 762-787, 2019.</p>
+
+<p>[16] Constantinos Daskalakis，Andrew Ilyas, Vasilis Syrgkanis,
+Haoyang Zeng, &ldquo;Training GAN with optimism&rdquo;, arXiv: 1711.00141,
+2018.</p>
+
+    </div>
+
+<script>talkyardServerUrl='https:\/\/comments-for-stanniszhou-github-io.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Jian-Zhou Zhang</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-04-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/discussion-group/post/ffjord/">
+            <span class="next-text nav-default">Digging Deeper Into Flow-based Generative Models</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/StannisZhou/discussion-group" class="iconfont icon-github" title="github"></a>
+  <a href="https://stanniszhou.github.io/discussion-group/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> site pv: <span id="busuanzi_value_site_pv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> site uv: <span id="busuanzi_value_site_uv"><img src="https://stanniszhou.github.io/discussion-group/img/spinner.svg" alt="spinner.svg"/></span> </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">olOwOlo</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stanniszhou.github.io/discussion-group/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
